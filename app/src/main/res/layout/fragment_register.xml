@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
-    tools:context=".home_screens.RegisterFragment">
+    tools:context=".home_screens.RegisterFragment"
+    android:background="#E2EFE8">
 
     <TextView
         android:autoSizeTextType="uniform"
@@ -14,7 +15,6 @@
         android:text="Register"
         android:textColor="@color/black"
         android:textSize="70sp"
-        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.492"
@@ -95,9 +95,8 @@
         android:layout_marginBottom="72dp"
         android:text="Create Account"
         android:textColor="@color/black"
-        android:backgroundTint="#ffffff"
+        android:background="@drawable/lightbutton"
         android:textSize="25sp"
-        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
