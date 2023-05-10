@@ -21,7 +21,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideDataRepo(): RepositoryDataInterface = RepositoryDataImplemented()
+        fun provideDataRepo(): RepositoryDataInterface = RepositoryDataImplemented()
     @Singleton
     @Provides
     fun provideAuth(): FirebaseAuthInterface = FirebaseAuthImplemented()

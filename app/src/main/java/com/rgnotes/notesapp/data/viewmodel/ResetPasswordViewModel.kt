@@ -14,7 +14,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class RegisterViewModel @Inject constructor(private val authRepo: RepositoryAuthInterface):
+class ResetPasswordViewModel @Inject constructor(private val authRepo: RepositoryAuthInterface):
     ViewModel() {
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
     private val _status = MutableSharedFlow<Status?>(replay = 1)
@@ -23,6 +23,7 @@ class RegisterViewModel @Inject constructor(private val authRepo: RepositoryAuth
     suspend fun clearUpdate() {
         _status.emit(null)
     }
+
     private suspend fun isEmailValid(email: String?): Boolean {
         if (email.isNullOrEmpty()) {
             _status.emit(AuthStatus.Error("Please enter your email!"))
@@ -36,21 +37,12 @@ class RegisterViewModel @Inject constructor(private val authRepo: RepositoryAuth
         } else (return true)
     }
 
-    private suspend fun isPasswordValid(password: String?): Boolean {
-        if (password.isNullOrEmpty()) {
-            _status.emit(AuthStatus.Error("Please enter a password!"))
-            return false
-        } else if (password.count() < 6) {
-            _status.emit(AuthStatus.Error("Password must be at least 6 characters!"))
-            return false
-        } else (return true)
-    }
 
-    fun registerUser(email: String?, password: String?) {
+    fun  resetPassword(email: String?) {
         viewModelScope.launch {
             withContext(ioDispatcher) {
-                if (isEmailValid(email) && isPasswordValid(password)) {
-                    authRepo.registerUser(email!!, password!!).collect { _status.emit(it) }}
+                if (isEmailValid(email)) {
+                    authRepo.resetPassword(email!!).collect { _status.emit(it) }}
             }
         }
 

@@ -10,5 +10,6 @@ interface RepositoryDataInterface {
     suspend fun readAllNotes(): Flow<DataStatus>
     suspend fun updateNote(id:String,note: Note): Flow<DataStatus>
     suspend fun deleteNote(id:String): Flow<DataStatus>
+    suspend fun deleteAccountData(): Flow<DataStatus>
 
 }

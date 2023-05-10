@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".home_screens.EditNoteFragment">
+    tools:context=".home_screens.EditNoteFragment"
+    android:background="@drawable/allbackgr">
 
 
         <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -20,20 +21,17 @@
                 android:elevation="4dp"
                 android:backgroundTint="#E2EFE8"/>
             <com.google.android.material.textfield.TextInputLayout
-                android:layout_marginTop="50dp"
                 android:autoSizeTextType="uniform"
                 android:id="@+id/titlelayout"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:paddingBottom="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:hintTextColor="@color/black"
-                app:counterTextColor="@color/black"
-                app:helperTextTextColor="@color/black"
-                app:prefixTextColor="@color/black"
-                app:suffixTextColor="@color/black"
-                android:textColorHint="@color/black"
-                app:placeholderTextColor="@color/black"
-                app:boxStrokeColor="@color/black"
-                android:hint="Title">
+                android:textColorHint="#8a8a8a"
+                app:hintTextColor="#8a8a8a"
+                android:hint="Title"
+                >
 
                 <EditText
                     android:autoSizeTextType="uniform"
@@ -52,14 +50,12 @@
                 android:id="@+id/bodylayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:hintTextColor="@color/black"
-                app:counterTextColor="@color/black"
-                app:helperTextTextColor="@color/black"
-                app:prefixTextColor="@color/black"
-                app:suffixTextColor="@color/black"
-                android:textColorHint="@color/black"
-                app:placeholderTextColor="@color/black"
-                app:boxStrokeColor="@color/black"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:textColorHint="#8a8a8a"
+                app:hintTextColor="#8a8a8a"
                 android:hint="Body">
 
                 <EditText
@@ -81,7 +77,10 @@
                 android:layout_marginStart="30dp"
                 android:autoSizeTextType="uniform"
                 android:id="@+id/finished"
-
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:layout_width="match_parent"
                 android:layout_gravity="center"
                 android:paddingLeft="40dp"

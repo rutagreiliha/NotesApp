@@ -1,6 +1,5 @@
 package com.rgnotes.notesapp.data
 
-import java.util.Calendar
-import java.util.Date
+import java.time.LocalDateTime
 
-data class Note(var title: String?= "", var body: String?= "", var colour: String?= "", var dateTime:Date?=null)
+data class Note(var title: String?= "", var body: String?= "", var colour: String?= "", var dateTime: String ="", var id:String?="")

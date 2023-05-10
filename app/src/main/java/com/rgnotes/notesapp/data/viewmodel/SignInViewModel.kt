@@ -40,7 +40,6 @@ class SignInViewModel @Inject constructor(private val authRepo: RepositoryAuthIn
     }
 
     private suspend fun isPasswordValid(password: String?): Boolean {
-        viewModelScope.launch {}
         if (password.isNullOrEmpty()) {
             _status.emit(AuthStatus.Error("Please enter your password!"))
             return false

@@ -38,8 +38,15 @@ class FirebaseAuthImplemented : FirebaseAuthInterface {
         }
     }
 
-    override suspend fun deleteAccount(): Flow<AuthStatus> {
-        TODO("Not yet implemented")
+    override suspend fun deleteAccount(): Flow<AuthStatus> =flow {
+        Firebase.auth.currentUser!!.delete().await()
+        try {
+            Firebase.auth.currentUser!!.delete().await()
+            emit(AuthStatus.Success("Success!"))
+
+        } catch (e: Exception) {
+            emit(AuthStatus.Error(e.toString()))
+        }
     }
 
     override suspend fun signOutUser(): Flow<AuthStatus> = flow {

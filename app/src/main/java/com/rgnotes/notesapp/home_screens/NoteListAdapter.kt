@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.rgnotes.notesapp.R
-import com.rgnotes.notesapp.data.NoteTitleId
+import com.rgnotes.notesapp.data.Note
 
-class NoteListAdapter(private val noteTitleList: ArrayList<NoteTitleId>) :
+class NoteListAdapter(private val noteTitleList: ArrayList<Note>) :
     RecyclerView.Adapter<NoteListAdapter.ViewHolder>() {
     private lateinit var listener: onItemClickListener
 

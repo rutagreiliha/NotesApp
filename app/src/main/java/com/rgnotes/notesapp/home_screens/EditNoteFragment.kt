@@ -8,13 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.database.ServerValue
 import com.rgnotes.notesapp.R
 import com.rgnotes.notesapp.data.status.DataStatus
 import com.rgnotes.notesapp.data.Note
@@ -25,6 +24,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
+
 @AndroidEntryPoint
 class EditNoteFragment : Fragment() {
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
@@ -44,45 +45,6 @@ class EditNoteFragment : Fragment() {
     ): View? {
         _binding = FragmentEditNoteBinding.inflate(inflater, container, false)
         binding?.apply {
-
-
-            noteId=requireArguments().getString("noteid")
-
-            val id = noteId
-            if(id != null){
-                val toolbar: Toolbar = toolbar as Toolbar
-                toolbar.inflateMenu(R.menu.edit_menu_action_bar)
-                toolbar.setOnMenuItemClickListener {
-                    // Handle item selection
-                    when (it.itemId) {
-                        R.id.delete -> {
-                            val confirmationDialog = AlertDialog.Builder(requireContext())
-                            confirmationDialog.setMessage("Are you sure you want to delete this note?")
-                                .setCancelable(true).setPositiveButton("Delete") { _, _ ->
-                                        viewmodel.deleteNote(id)
-
-                                }.setNegativeButton("Back") { dialog, _ -> dialog.dismiss() }
-
-                            confirmationDialog.create().show()
-                            true
-                        }
-                        else -> {false}
-                    }
-                }
-                viewmodel.readNote(id)}
-
-            finished.setOnClickListener{
-                if(id==null){
-                    note.title = notetitle.text.toString()
-                    note.body= notebody.text.toString()
-                    viewmodel.createNote(note)
-                }
-                else{
-                    note.title = notetitle.text.toString()
-                    note.body= notebody.text.toString()
-                    viewmodel.updateNote(id,note)
-                }}
-
 
             viewLifecycleOwner.lifecycleScope.launch(mainDispatcher) {
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -131,6 +93,46 @@ class EditNoteFragment : Fragment() {
                     }
                 }
             }
+
+            noteId=requireArguments().getString("noteid")
+
+            val id = noteId
+            if(id != null){
+                val toolbar: Toolbar = toolbar as Toolbar
+                toolbar.inflateMenu(R.menu.edit_menu_action_bar)
+                toolbar.setOnMenuItemClickListener {
+                    // Handle item selection
+                    when (it.itemId) {
+                        R.id.delete -> {
+                            val confirmationDialog = AlertDialog.Builder(requireContext())
+                            confirmationDialog.setMessage("Are you sure you want to delete this note?")
+                                .setCancelable(true).setPositiveButton("Delete") { _, _ ->
+                                        viewmodel.deleteNote(id)
+
+                                }.setNegativeButton("Back") { dialog, _ -> dialog.dismiss() }
+
+                            confirmationDialog.create().show()
+                            true
+                        }
+                        else -> {false}
+                    }
+                }
+                viewmodel.readNote(id)}
+
+            finished.setOnClickListener{
+                note.title = notetitle.text.toString()
+                note.body= notebody.text.toString()
+                note.dateTime = LocalDateTime.now().toString()
+                if(id==null){
+
+                    viewmodel.createNote(note)
+                }
+                else{
+                    viewmodel.updateNote(id,note)
+                }}
+
+
+
         }
 
         return binding?.root

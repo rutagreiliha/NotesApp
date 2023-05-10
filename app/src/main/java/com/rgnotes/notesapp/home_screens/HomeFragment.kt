@@ -1,13 +1,11 @@
 package com.rgnotes.notesapp.home_screens
 
-import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -17,7 +15,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rgnotes.notesapp.R
-import com.rgnotes.notesapp.data.NoteTitleId
+import com.rgnotes.notesapp.data.Note
 import com.rgnotes.notesapp.data.status.AuthStatus
 import com.rgnotes.notesapp.data.status.DataStatus
 import com.rgnotes.notesapp.data.viewmodel.HomeViewModel
@@ -36,7 +34,9 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
     private val mainDispatcher: CoroutineDispatcher = Dispatchers.Main
-    var notes: ArrayList<NoteTitleId> = arrayListOf()
+    var notes: ArrayList<Note> = arrayListOf()
+    private val adapter  = NoteListAdapter(notes)
+    private var currentOrder = "Newest first"
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,41 +44,17 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         binding?.apply {
 
-            val toolbar: Toolbar = toolbar as Toolbar
-           toolbar.inflateMenu(R.menu.home_menu_action_bar)
-
-            toolbar.setOnMenuItemClickListener {
-                // Handle item selection
-                when (it.itemId) {
-                    R.id.sort -> {
-                        //add sort
-                        true
-                    }
-                    R.id.signout -> {
-                        //sign out
-                        true
-                    }
-                    R.id.deleteaccount -> {
-                        //delete
-                        true
-                    }
-                    else -> {false}
-                }
-            }
-
-            viewmodel.isUserSignedIn()
-            val adapter  = NoteListAdapter(notes)
-            notesRecyclerView.adapter = adapter
-            notesRecyclerView.setHasFixedSize(true)
-            notesRecyclerView.layoutManager = LinearLayoutManager(requireContext().applicationContext)
-
             viewLifecycleOwner.lifecycleScope.launch(mainDispatcher) {
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewmodel.status.collectLatest {
                         when (it) {
                             is DataStatus.GetNote<*> -> {
                                 notes.clear()
-                                notes.addAll(it.data as ArrayList<NoteTitleId>)
+                                notes.addAll(it.data as ArrayList<Note>)
+                                if (currentOrder == "Newest first"){
+                                    notes.sortByDescending { it.dateTime}
+                                }else{notes.sortBy { it.dateTime }}
+
                                 adapter.notifyDataSetChanged()
 
 
@@ -108,6 +84,43 @@ class HomeFragment : Fragment() {
                             else -> {}
                         }
                     }
+                }
+            }
+
+
+            viewmodel.isUserSignedIn()
+            notesRecyclerView.adapter = adapter
+            notesRecyclerView.setHasFixedSize(true)
+            notesRecyclerView.layoutManager = LinearLayoutManager(requireContext().applicationContext)
+            val toolbar: Toolbar = toolbar as Toolbar
+            toolbar.inflateMenu(R.menu.home_menu_action_bar)
+
+            toolbar.setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.sort -> {
+                        val confirmationDialog = android.app.AlertDialog.Builder(requireContext())
+                        val orders = arrayOf("Newest first", "Oldest first")
+                        confirmationDialog.setTitle("Sort by date edited").setItems(orders,DialogInterface.OnClickListener{dialog,which ->
+                            when (orders[which]){
+                                "Newest first" -> {
+                                    currentOrder = "Newest first"
+                                    notes.sortByDescending { it.dateTime }
+                                    adapter.notifyDataSetChanged()}
+                                "Oldest first" -> {
+                                    currentOrder = "Oldest first"
+                                    notes.sortBy { it.dateTime }
+                                    adapter.notifyDataSetChanged()}
+                            }
+                        })
+                        confirmationDialog.setNegativeButton("Back", null)
+                        val dialog = confirmationDialog.create().show()
+                        true
+                    }
+                    R.id.manageaccount -> {
+                        findNavController().navigate(R.id.action_homeFragment_to_settingsFragment)
+                        true
+                    }
+                    else -> {false}
                 }
             }
 
