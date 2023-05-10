@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".home_screens.SignInFragment">
+    tools:context=".home_screens.SignInFragment"
+    android:background="@drawable/bckgr">
 
 
 
@@ -17,7 +18,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:text="Hello!"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="110sp"
         android:autoSizeTextType="uniform"
         app:layout_constraintBottom_toTopOf="@+id/emailinputter"
@@ -94,11 +95,14 @@
         android:layout_height="wrap_content"
         android:text="Sign In"
         android:textColor="@color/black"
-        android:backgroundTint="#ffffff"
-        android:textSize="11sp"
+        android:background="@drawable/savebutton"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="10dp"
         android:autoSizeTextType="uniform"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/guideline"
         app:layout_constraintRight_toRightOf="parent"
@@ -113,16 +117,19 @@
         app:layout_constraintGuide_percent="0.5" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/RegisterMainButton"
+        android:id="@+id/registerButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Register"
         android:textColor="@color/black"
-        android:backgroundTint="#ffffff"
-        android:textSize="11sp"
+        android:background="@drawable/lightbutton"
         android:layout_marginEnd="10dp"
         android:layout_marginStart="20dp"
         android:autoSizeTextType="uniform"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/guideline"
@@ -137,14 +144,12 @@
         android:stateListAnimator="@null"
         android:text="I forgot my password"
         android:textColor="@color/black"
-        android:textSize="18sp"
-        android:textStyle="bold"
         android:autoSizeTextType="uniform"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/RegisterMainButton" />
+        app:layout_constraintTop_toBottomOf="@+id/registerButton" />
 
     <ProgressBar
         android:id="@+id/loginprogressbar"

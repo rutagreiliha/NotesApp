@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".home_screens.SettingsFragment"
+    android:orientation="vertical"
+    android:background="@drawable/allbackgr">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="200dp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+
+        android:autoSizeTextType="uniform"
+        android:id="@+id/signout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Sign Out"
+        android:background="@drawable/darkbutton"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="15dp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:autoSizeTextType="uniform"
+        android:id="@+id/deleteaccount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Delete Account"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:background="@drawable/savebutton"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"/>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="15dp" />
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>
