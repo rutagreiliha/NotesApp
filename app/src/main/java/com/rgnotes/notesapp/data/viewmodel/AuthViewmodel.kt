@@ -2,8 +2,8 @@ package com.rgnotes.notesapp.data.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rgnotes.notesapp.data.status.DataStatus
 import com.rgnotes.notesapp.data.repo.RepositoryAuthInterface
+import com.rgnotes.notesapp.data.status.DataStatus
 import com.rgnotes.notesapp.data.status.Status
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -29,7 +29,7 @@ class AuthViewmodel @Inject constructor(private val repository: RepositoryAuthIn
         if (email.isNullOrEmpty()) {
             _status.emit(DataStatus.Error("Please enter your email!"))
             return false
-        } else if (!email.contains('@')&&!email.contains('.')) {
+        } else if (!email.contains('@') && !email.contains('.')) {
             _status.emit(DataStatus.Error("Invalid format!"))
             return false
         } else if (email.count() < 4) {

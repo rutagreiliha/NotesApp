@@ -29,13 +29,13 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
-    private val viewmodel:HomeViewModel by activityViewModels()
+    private val viewmodel: HomeViewModel by activityViewModels()
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
     private val mainDispatcher: CoroutineDispatcher = Dispatchers.Main
     var notes: ArrayList<Note> = arrayListOf()
-    private val adapter  = NoteListAdapter(notes)
+    private val adapter = NoteListAdapter(notes)
     private var currentOrder = "Newest first"
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,9 +51,11 @@ class HomeFragment : Fragment() {
                             is DataStatus.GetNote<*> -> {
                                 notes.clear()
                                 notes.addAll(it.data as ArrayList<Note>)
-                                if (currentOrder == "Newest first"){
-                                    notes.sortByDescending { it.dateTime}
-                                }else{notes.sortBy { it.dateTime }}
+                                if (currentOrder == "Newest first") {
+                                    notes.sortByDescending { it.dateTime }
+                                } else {
+                                    notes.sortBy { it.dateTime }
+                                }
 
                                 adapter.notifyDataSetChanged()
 
@@ -91,7 +93,8 @@ class HomeFragment : Fragment() {
             viewmodel.isUserSignedIn()
             notesRecyclerView.adapter = adapter
             notesRecyclerView.setHasFixedSize(true)
-            notesRecyclerView.layoutManager = LinearLayoutManager(requireContext().applicationContext)
+            notesRecyclerView.layoutManager =
+                LinearLayoutManager(requireContext().applicationContext)
             val toolbar: Toolbar = toolbar as Toolbar
             toolbar.inflateMenu(R.menu.home_menu_action_bar)
 
@@ -100,18 +103,21 @@ class HomeFragment : Fragment() {
                     R.id.sort -> {
                         val confirmationDialog = android.app.AlertDialog.Builder(requireContext())
                         val orders = arrayOf("Newest first", "Oldest first")
-                        confirmationDialog.setTitle("Sort by date edited").setItems(orders,DialogInterface.OnClickListener{dialog,which ->
-                            when (orders[which]){
-                                "Newest first" -> {
-                                    currentOrder = "Newest first"
-                                    notes.sortByDescending { it.dateTime }
-                                    adapter.notifyDataSetChanged()}
-                                "Oldest first" -> {
-                                    currentOrder = "Oldest first"
-                                    notes.sortBy { it.dateTime }
-                                    adapter.notifyDataSetChanged()}
-                            }
-                        })
+                        confirmationDialog.setTitle("Sort by date edited")
+                            .setItems(orders, DialogInterface.OnClickListener { dialog, which ->
+                                when (orders[which]) {
+                                    "Newest first" -> {
+                                        currentOrder = "Newest first"
+                                        notes.sortByDescending { it.dateTime }
+                                        adapter.notifyDataSetChanged()
+                                    }
+                                    "Oldest first" -> {
+                                        currentOrder = "Oldest first"
+                                        notes.sortBy { it.dateTime }
+                                        adapter.notifyDataSetChanged()
+                                    }
+                                }
+                            })
                         confirmationDialog.setNegativeButton("Back", null)
                         val dialog = confirmationDialog.create().show()
                         true
@@ -120,7 +126,9 @@ class HomeFragment : Fragment() {
                         findNavController().navigate(R.id.action_homeFragment_to_settingsFragment)
                         true
                     }
-                    else -> {false}
+                    else -> {
+                        false
+                    }
                 }
             }
 
@@ -129,10 +137,14 @@ class HomeFragment : Fragment() {
             adapter.setOnItemClickListener(object : NoteListAdapter.onItemClickListener {
                 override fun onItemClick(position: Int) {
                     val result = notes[position].id
-                    findNavController().navigate(R.id.action_homeFragment_to_editNoteFragment,Bundle().apply { putString("noteid",result) })}})
+                    findNavController().navigate(
+                        R.id.action_homeFragment_to_editNoteFragment,
+                        Bundle().apply { putString("noteid", result) })
+                }
+            })
 
 
-            add.setOnClickListener{
+            add.setOnClickListener {
                 findNavController().navigate(R.id.action_homeFragment_to_editNoteFragment)
             }
 
@@ -141,10 +153,12 @@ class HomeFragment : Fragment() {
 
         return binding?.root
     }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

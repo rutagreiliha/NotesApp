@@ -42,7 +42,7 @@ class RepositoryDataImplemented : RepositoryDataInterface{
         try{
             val listOfNotes = ArrayList<Note>()
             val note = database.child("users").child( Firebase.auth.currentUser!!.uid).child("notes").get().await().children.forEach { item -> listOfNotes.add(
-                Note(item.child("title").value.toString(),"","",
+                Note(item.child("title").value.toString(),item.child("body").value.toString(),"",
                     item.child("dateTime").value.toString(),item.child("id").value.toString())
             ) }
             emit(DataStatus.GetNote(listOfNotes))

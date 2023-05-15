@@ -1,7 +1,5 @@
 package com.rgnotes.notesapp.data.di
 
-import android.content.Context
-import androidx.lifecycle.ViewModel
 import com.rgnotes.notesapp.data.firebase.FirebaseAuthImplemented
 import com.rgnotes.notesapp.data.firebase.FirebaseAuthInterface
 import com.rgnotes.notesapp.data.repo.RepositoryAuthImplemented
@@ -21,15 +19,15 @@ object AppModule {
 
     @Singleton
     @Provides
-        fun provideDataRepo(): RepositoryDataInterface = RepositoryDataImplemented()
+    fun provideDataRepo(): RepositoryDataInterface = RepositoryDataImplemented()
+
     @Singleton
     @Provides
     fun provideAuth(): FirebaseAuthInterface = FirebaseAuthImplemented()
 
     @Singleton
     @Provides
-    fun provideRepositoryAuthImplemented(firebaseAuth: FirebaseAuthInterface): RepositoryAuthInterface = RepositoryAuthImplemented(firebaseAuth)
-
-
+    fun provideRepositoryAuthImplemented(firebaseAuth: FirebaseAuthInterface): RepositoryAuthInterface =
+        RepositoryAuthImplemented(firebaseAuth)
 
 }

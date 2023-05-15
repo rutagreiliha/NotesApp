@@ -14,7 +14,10 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val authRepo:RepositoryAuthInterface,private val dataRepo:RepositoryDataInterface):ViewModel() {
+class HomeViewModel @Inject constructor(
+    private val authRepo: RepositoryAuthInterface,
+    private val dataRepo: RepositoryDataInterface
+) : ViewModel() {
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
     private val _status = MutableSharedFlow<Status?>(replay = 1)
     val status: MutableSharedFlow<Status?> = _status
@@ -30,7 +33,8 @@ class HomeViewModel @Inject constructor(private val authRepo:RepositoryAuthInter
             }
         }
     }
-   fun readAllNotes(){
+
+    fun readAllNotes() {
         viewModelScope.launch {
             withContext(ioDispatcher) {
                 dataRepo.readAllNotes().collect { _status.emit(it) }

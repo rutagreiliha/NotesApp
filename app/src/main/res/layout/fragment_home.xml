@@ -9,31 +9,31 @@
     android:fitsSystemWindows="true"
     android:background="@drawable/allbackgr">
 
-   <androidx.appcompat.widget.Toolbar
-       android:id="@+id/toolbar"
-       app:title="My Notes"
-       android:minHeight="?attr/actionBarSize"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:elevation="4dp"
-       android:backgroundTint="#E2EFE8"
-       android:layout_alignParentTop="true"/>
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        app:title="My Notes"
+        android:minHeight="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="4dp"
+        android:background="#ffffff"
+        android:layout_alignParentTop="true"/>
 
-   <androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/notesRecyclerView"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-       android:layout_below="@+id/toolbar"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/notesRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"/>
 
-   <com.google.android.material.floatingactionbutton.FloatingActionButton
-       android:id="@+id/add"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:layout_marginEnd="25dp"
-       android:layout_marginBottom="25dp"
-       android:src="@drawable/add"
-       android:layout_alignParentBottom="true"
-       android:layout_alignParentEnd="true"/>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="25dp"
+        android:src="@drawable/add"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"/>
 
 
 

@@ -7,94 +7,98 @@
     android:background="@drawable/allbackgr">
 
 
-        <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/edittextlayout"
+    <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/edittextlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            app:title="Edit Note"
+            android:minHeight="?attr/actionBarSize"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:elevation="4dp"
+            android:background="#ffffff"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:autoSizeTextType="uniform"
+            android:id="@+id/titlelayout"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:paddingBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="#8a8a8a"
+            app:hintTextColor="#8a8a8a"
+            android:hint="Title"
+            >
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:minHeight="?attr/actionBarSize"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:elevation="4dp"
-                android:backgroundTint="#E2EFE8"/>
-            <com.google.android.material.textfield.TextInputLayout
+            <EditText
                 android:autoSizeTextType="uniform"
-                android:id="@+id/titlelayout"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:paddingBottom="10dp"
+                android:id="@+id/notetitle"
+                android:textSize="20sp"
+                android:textCursorDrawable="@null"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColorHint="#8a8a8a"
-                app:hintTextColor="#8a8a8a"
-                android:hint="Title"
-                >
-
-                <EditText
-                    android:autoSizeTextType="uniform"
-                    android:id="@+id/notetitle"
-                    android:textSize="20sp"
-                    android:textCursorDrawable="@null"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/white"
-                    android:textColorHint="@color/black" />
-            </com.google.android.material.textfield.TextInputLayout>
+                android:backgroundTint="@color/white"
+                android:textColorHint="@color/black" />
+        </com.google.android.material.textfield.TextInputLayout>
 
 
-            <com.google.android.material.textfield.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
+            android:autoSizeTextType="uniform"
+            android:id="@+id/bodylayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:textColorHint="#8a8a8a"
+            app:hintTextColor="#8a8a8a"
+            android:hint="Body">
+
+            <EditText
                 android:autoSizeTextType="uniform"
-                android:id="@+id/bodylayout"
+                android:id="@+id/notebody"
+                android:textSize="20sp"
+                android:textCursorDrawable="@null"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
-                android:textColorHint="#8a8a8a"
-                app:hintTextColor="#8a8a8a"
-                android:hint="Body">
-
-                <EditText
-                    android:autoSizeTextType="uniform"
-                    android:id="@+id/notebody"
-                    android:textSize="20sp"
-                    android:textCursorDrawable="@null"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/white"
-                    android:textColorHint="@color/black" />
-            </com.google.android.material.textfield.TextInputLayout>
+                android:backgroundTint="@color/white"
+                android:textColorHint="@color/black" />
+        </com.google.android.material.textfield.TextInputLayout>
 
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:layout_marginTop="40dp"
-                android:layout_marginBottom="30dp"
-                android:layout_marginEnd="30dp"
-                android:layout_marginStart="30dp"
-                android:autoSizeTextType="uniform"
-                android:id="@+id/finished"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:layout_width="match_parent"
-                android:layout_gravity="center"
-                android:paddingLeft="40dp"
-                android:paddingRight="40dp"
-                android:background="@drawable/savebutton"
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="30dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="120dp"
+            android:autoSizeTextType="uniform"
+            android:id="@+id/finished"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:paddingStart="40dp"
+            android:paddingEnd="40dp"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:background="@drawable/savebutton"
 
 
-                android:layout_height="wrap_content"
-                android:gravity="center|center_vertical"
-                android:text="Save"
-                android:textSize="20sp"/>
+            android:layout_height="wrap_content"
+            android:gravity="center|center_vertical"
+            android:text="Save"
+            android:textSize="20sp"/>
 
 
-        </LinearLayout>
+    </LinearLayout>
 
 
 

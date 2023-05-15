@@ -16,6 +16,8 @@ class NoteListAdapter(private val noteTitleList: ArrayList<Note>) :
     class ViewHolder(view: View, clickListener: onItemClickListener) :
         RecyclerView.ViewHolder(view) {
         val textView: TextView = view.findViewById(R.id.showtitle)
+        val textViewBody: TextView = view.findViewById(R.id.showbody)
+        val textViewDate: TextView = view.findViewById(R.id.showdate)
 
         init {
             view.setOnClickListener {
@@ -40,7 +42,18 @@ class NoteListAdapter(private val noteTitleList: ArrayList<Note>) :
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.textView.text = noteTitleList[position].title.toString()
+        viewHolder.textViewBody.text = noteTitleList[position].body.toString()
+        viewHolder.textViewDate.text =formatDateTime(noteTitleList[position].dateTime)
     }
 
     override fun getItemCount() = noteTitleList.size
+
+    fun formatDateTime(date: String): String {
+        val day = date.split("T")[0].split("-")[2]
+        val month = date.split("T")[0].split("-")[1]
+        val year = date.split("T")[0].split("-")[0]
+        val hour = date.split("T")[1].split(":")[0]
+        val minute = date.split("T")[1].split(":")[1]
+        return "$hour:$minute $day/$month/$year"
+    }
 }

@@ -6,5 +6,5 @@
         android:id="@+id/delete"
         android:icon="@drawable/bin"
         android:orderInCategory="1"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
 </menu>

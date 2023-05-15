@@ -1,21 +1,18 @@
 package com.rgnotes.notesapp.home_screens
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.rgnotes.notesapp.R
 import com.rgnotes.notesapp.data.status.AuthStatus
-import com.rgnotes.notesapp.data.viewmodel.RegisterViewModel
 import com.rgnotes.notesapp.data.viewmodel.ResetPasswordViewModel
-import com.rgnotes.notesapp.databinding.FragmentRegisterBinding
 import com.rgnotes.notesapp.databinding.FragmentResetPasswordBinding
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -73,10 +70,12 @@ class ResetPasswordFragment : Fragment() {
 
         return binding?.root
     }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

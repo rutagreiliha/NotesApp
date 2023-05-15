@@ -3,9 +3,7 @@ package com.rgnotes.notesapp.data.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rgnotes.notesapp.data.repo.RepositoryAuthInterface
-import com.rgnotes.notesapp.data.repo.RepositoryDataInterface
 import com.rgnotes.notesapp.data.status.AuthStatus
-import com.rgnotes.notesapp.data.status.DataStatus
 import com.rgnotes.notesapp.data.status.Status
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -16,7 +14,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class SignInViewModel @Inject constructor(private val authRepo: RepositoryAuthInterface):
+class SignInViewModel @Inject constructor(private val authRepo: RepositoryAuthInterface) :
     ViewModel() {
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
     private val _status = MutableSharedFlow<Status?>(replay = 1)
@@ -30,7 +28,7 @@ class SignInViewModel @Inject constructor(private val authRepo: RepositoryAuthIn
         if (email.isNullOrEmpty()) {
             _status.emit(AuthStatus.Error("Please enter your email!"))
             return false
-        } else if (!email.contains('@')&&!email.contains('.')) {
+        } else if (!email.contains('@') && !email.contains('.')) {
             _status.emit(AuthStatus.Error("Invalid format!"))
             return false
         } else if (email.count() < 4) {
@@ -49,13 +47,14 @@ class SignInViewModel @Inject constructor(private val authRepo: RepositoryAuthIn
         } else (return true)
     }
 
-     fun signInUser(email: String?, password: String?) {
-            viewModelScope.launch {
-                withContext(ioDispatcher) {
-                    if (isEmailValid(email) && isPasswordValid(password)) {
-                    authRepo.signInUser(email!!, password!!).collect { _status.emit(it) }}
+    fun signInUser(email: String?, password: String?) {
+        viewModelScope.launch {
+            withContext(ioDispatcher) {
+                if (isEmailValid(email) && isPasswordValid(password)) {
+                    authRepo.signInUser(email!!, password!!).collect { _status.emit(it) }
                 }
             }
+        }
 
     }
 }
