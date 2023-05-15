@@ -1,11 +1,12 @@
 package com.rgnotes.notesapp.data.repo
 
-import com.rgnotes.notesapp.data.status.AuthStatus
 import com.rgnotes.notesapp.data.firebase.FirebaseAuthInterface
+import com.rgnotes.notesapp.data.status.AuthStatus
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class RepositoryAuthImplemented @Inject constructor(private val firebaseAuth: FirebaseAuthInterface) : RepositoryAuthInterface {
+class RepositoryAuthImplemented @Inject constructor(private val firebaseAuth: FirebaseAuthInterface) :
+    RepositoryAuthInterface {
     override suspend fun registerUser(email: String, password: String): Flow<AuthStatus> {
         return firebaseAuth.registerUser(email, password)
     }

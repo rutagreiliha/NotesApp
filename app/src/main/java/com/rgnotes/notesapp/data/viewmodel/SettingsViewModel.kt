@@ -14,7 +14,10 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsViewModel @Inject constructor(private val authRepository: RepositoryAuthInterface, private val dataRepository: RepositoryDataInterface) :
+class SettingsViewModel @Inject constructor(
+    private val authRepository: RepositoryAuthInterface,
+    private val dataRepository: RepositoryDataInterface
+) :
     ViewModel() {
 
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
@@ -25,14 +28,15 @@ class SettingsViewModel @Inject constructor(private val authRepository: Reposito
         _status.emit(null)
     }
 
-     fun signOut(){
+    fun signOut() {
         viewModelScope.launch {
             withContext(ioDispatcher) {
                 authRepository.signOutUser().collect { _status.emit(it) }
             }
         }
     }
-     fun deleteAccount() {
+
+    fun deleteAccount() {
         viewModelScope.launch {
             withContext(ioDispatcher) {
                 dataRepository.deleteAccountData().collect { _status.emit(it) }

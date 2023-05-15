@@ -3,15 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-        <item android:title="Sort by..."
-            android:id="@+id/sort"
-            android:icon="@drawable/sorticon"
-            android:orderInCategory="1"
-            app:showAsAction="ifRoom"/>
-        <item android:title="Manage Account"
-            android:id="@+id/manageaccount"
-            android:icon="@drawable/account"
-            android:orderInCategory="2"
-            app:showAsAction="ifRoom"/>
+    <item
+        android:title="Sort by..."
+        android:id="@+id/sort"
+        android:icon="@drawable/sorticon"
+        android:orderInCategory="1"
+        app:showAsAction="ifRoom" />
+    <item
+        android:title="Manage Account"
+        android:id="@+id/manageaccount"
+        android:icon="@drawable/account"
+        android:orderInCategory="2"
+        app:showAsAction="ifRoom" />
 
 </menu>

@@ -2,21 +2,20 @@ package com.rgnotes.notesapp.home_screens
 
 import android.app.AlertDialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.database.ServerValue
 import com.rgnotes.notesapp.R
-import com.rgnotes.notesapp.data.status.DataStatus
 import com.rgnotes.notesapp.data.Note
+import com.rgnotes.notesapp.data.status.DataStatus
 import com.rgnotes.notesapp.data.viewmodel.EditNoteViewModel
 import com.rgnotes.notesapp.databinding.FragmentEditNoteBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,8 +32,8 @@ class EditNoteFragment : Fragment() {
     private val viewmodel: EditNoteViewModel by activityViewModels()
     private var _binding: FragmentEditNoteBinding? = null
     private val binding get() = _binding
-    private var noteId:String? = null
-    private var note:Note=Note()
+    private var noteId: String? = null
+    private var note: Note = Note()
     override fun onStart() {
         super.onStart()
     }
@@ -61,7 +60,7 @@ class EditNoteFragment : Fragment() {
                                 viewmodel.clearUpdate()
                             }
                             is DataStatus.GetNote<*> -> {
-                                note =  it.data as Note
+                                note = it.data as Note
                                 notetitle.setText(note.title)
                                 notebody.setText(note.body)
 
@@ -94,10 +93,10 @@ class EditNoteFragment : Fragment() {
                 }
             }
 
-            noteId=requireArguments().getString("noteid")
+            noteId = requireArguments().getString("noteid")
 
             val id = noteId
-            if(id != null){
+            if (id != null) {
                 val toolbar: Toolbar = toolbar as Toolbar
                 toolbar.inflateMenu(R.menu.edit_menu_action_bar)
                 toolbar.setOnMenuItemClickListener {
@@ -107,40 +106,44 @@ class EditNoteFragment : Fragment() {
                             val confirmationDialog = AlertDialog.Builder(requireContext())
                             confirmationDialog.setMessage("Are you sure you want to delete this note?")
                                 .setCancelable(true).setPositiveButton("Delete") { _, _ ->
-                                        viewmodel.deleteNote(id)
+                                    viewmodel.deleteNote(id)
 
                                 }.setNegativeButton("Back") { dialog, _ -> dialog.dismiss() }
 
                             confirmationDialog.create().show()
                             true
                         }
-                        else -> {false}
+                        else -> {
+                            false
+                        }
                     }
                 }
-                viewmodel.readNote(id)}
+                viewmodel.readNote(id)
+            }
 
-            finished.setOnClickListener{
+            finished.setOnClickListener {
                 note.title = notetitle.text.toString()
-                note.body= notebody.text.toString()
+                note.body = notebody.text.toString()
                 note.dateTime = LocalDateTime.now().toString()
-                if(id==null){
+                if (id == null) {
 
                     viewmodel.createNote(note)
+                } else {
+                    viewmodel.updateNote(id, note)
                 }
-                else{
-                    viewmodel.updateNote(id,note)
-                }}
-
+            }
 
 
         }
 
         return binding?.root
     }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
