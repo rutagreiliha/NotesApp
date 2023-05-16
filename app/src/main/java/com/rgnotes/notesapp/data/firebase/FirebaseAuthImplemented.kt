@@ -44,7 +44,6 @@ class FirebaseAuthImplemented : FirebaseAuthInterface {
     }
 
     override suspend fun deleteAccount(): Flow<AuthStatus> = flow {
-        Firebase.auth.currentUser!!.delete().await()
         try {
             Firebase.auth.currentUser!!.delete().await()
             emit(AuthStatus.Success("Success!"))

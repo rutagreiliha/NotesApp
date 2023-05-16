@@ -102,8 +102,8 @@ class HomeFragment : Fragment() {
                 when (it.itemId) {
                     R.id.sort -> {
                         val confirmationDialog = android.app.AlertDialog.Builder(requireContext())
-                        val orders = arrayOf("Newest first", "Oldest first")
-                        confirmationDialog.setTitle("Sort by date edited")
+                        val orders = arrayOf("Newest first", "Oldest first","A to Z","Z to A")
+                        confirmationDialog.setTitle("Sort by")
                             .setItems(orders, DialogInterface.OnClickListener { dialog, which ->
                                 when (orders[which]) {
                                     "Newest first" -> {
@@ -114,6 +114,16 @@ class HomeFragment : Fragment() {
                                     "Oldest first" -> {
                                         currentOrder = "Oldest first"
                                         notes.sortBy { it.dateTime }
+                                        adapter.notifyDataSetChanged()
+                                    }
+                                    "A to Z" -> {
+                                        currentOrder =  "A to Z"
+                                        notes.sortBy { it.title }
+                                        adapter.notifyDataSetChanged()
+                                    }
+                                    "Z to A" -> {
+                                        currentOrder = "Z to A"
+                                        notes.sortByDescending { it.title }
                                         adapter.notifyDataSetChanged()
                                     }
                                 }

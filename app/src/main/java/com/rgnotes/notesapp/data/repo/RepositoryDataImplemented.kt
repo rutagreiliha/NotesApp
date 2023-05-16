@@ -6,8 +6,10 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.rgnotes.notesapp.data.Note
+import com.rgnotes.notesapp.data.User
 import com.rgnotes.notesapp.data.status.DataStatus
 import com.rgnotes.notesapp.data.firebase.FirebaseInfo.Companion.DATABASE_LOCATION
+import com.rgnotes.notesapp.data.status.AuthStatus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
@@ -80,6 +82,25 @@ class RepositoryDataImplemented : RepositoryDataInterface{
 
         }catch (e:Exception){
             emit(DataStatus.Error("Something went wrong!"))
+        }
+    }
+
+    override suspend fun setUserData(user: User): Flow<AuthStatus> =flow{
+        try{
+            database.child("users").child( Firebase.auth.currentUser!!.uid).child("data").setValue(user).await()
+            emit(AuthStatus.SetData("User data set!"))
+
+        }catch (e:Exception){
+            emit(AuthStatus.Error("Something went wrong!"))
+        }
+    }
+
+    override suspend fun getUserData(): Flow<AuthStatus>  =flow {
+        try{
+            val userdata = database.child("users").child( Firebase.auth.currentUser!!.uid).child("data").get().await().getValue<User>()
+            emit(AuthStatus.GetData(userdata))
+        }catch (e:Exception){
+            emit(AuthStatus.Error("Something went wrong!"))
         }
     }
 }

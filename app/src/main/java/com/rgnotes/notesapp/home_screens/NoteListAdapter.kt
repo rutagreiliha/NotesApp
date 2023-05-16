@@ -48,7 +48,7 @@ class NoteListAdapter(private val noteTitleList: ArrayList<Note>) :
 
     override fun getItemCount() = noteTitleList.size
 
-    fun formatDateTime(date: String): String {
+    private fun formatDateTime(date: String): String {
         val day = date.split("T")[0].split("-")[2]
         val month = date.split("T")[0].split("-")[1]
         val year = date.split("T")[0].split("-")[0]

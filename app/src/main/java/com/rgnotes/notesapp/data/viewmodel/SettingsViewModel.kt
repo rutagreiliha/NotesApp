@@ -40,7 +40,17 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             withContext(ioDispatcher) {
                 dataRepository.deleteAccountData().collect { _status.emit(it) }
+            }
+            withContext(ioDispatcher) {
                 authRepository.deleteAccount().collect { _status.emit(it) }
+            }
+        }
+    }
+
+    fun getUserData() {
+        viewModelScope.launch {
+            withContext(ioDispatcher) {
+                dataRepository.getUserData().collect { _status.emit(it) }
             }
         }
     }

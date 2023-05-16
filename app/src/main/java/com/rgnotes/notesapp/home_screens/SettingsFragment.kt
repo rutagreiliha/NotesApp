@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.rgnotes.notesapp.R
+import com.rgnotes.notesapp.data.User
 import com.rgnotes.notesapp.data.status.AuthStatus
 import com.rgnotes.notesapp.data.status.DataStatus
 import com.rgnotes.notesapp.data.viewmodel.SettingsViewModel
@@ -40,6 +41,12 @@ class SettingsFragment : Fragment() {
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewmodel.status.collectLatest {
                         when (it) {
+                            is AuthStatus.GetData<*> -> {
+                                val userdata = it.data as User
+                                val name = userdata.name
+                                if(name!=null&&name!=""){hiuser.text="Hi, $name"}
+                                viewmodel.clearUpdate()
+                            }
                             is AuthStatus.Success<*> -> {
 
                                 findNavController().navigate(R.id.action_settingsFragment_to_homeFragment)
@@ -66,6 +73,7 @@ class SettingsFragment : Fragment() {
                     }
                 }
             }
+            viewmodel.getUserData()
 
             signout.setOnClickListener {
                 val confirmationDialog = android.app.AlertDialog.Builder(requireContext())
@@ -107,7 +115,3 @@ class SettingsFragment : Fragment() {
         _binding = null
     }
 }
-
-
-
-

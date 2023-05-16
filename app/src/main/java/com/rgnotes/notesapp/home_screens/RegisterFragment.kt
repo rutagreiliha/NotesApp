@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.rgnotes.notesapp.R
+import com.rgnotes.notesapp.data.User
 import com.rgnotes.notesapp.data.status.AuthStatus
 import com.rgnotes.notesapp.data.viewmodel.RegisterViewModel
 import com.rgnotes.notesapp.databinding.FragmentRegisterBinding
@@ -27,6 +28,7 @@ class RegisterFragment : Fragment() {
     private val mainDispatcher: CoroutineDispatcher = Dispatchers.Main
     private val viewmodel: RegisterViewModel by activityViewModels()
     private var _binding: FragmentRegisterBinding? = null
+    private val user: User = User()
     private val binding get() = _binding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,9 +38,11 @@ class RegisterFragment : Fragment() {
         binding?.apply {
 
             createaccountbutton.setOnClickListener {
-                val email = emailinputregister.text.toString()
+                var email = emailinputregister.text.toString()
+                if(email.last() == ' '){email = email.dropLast(1)}
                 val password = passwordinputregister.text.toString()
-                viewmodel.registerUser(email, password)
+                user.name = usernameinput.text.toString()
+                viewmodel.registerUser(email, password,user)
             }
 
             viewLifecycleOwner.lifecycleScope.launch(mainDispatcher) {

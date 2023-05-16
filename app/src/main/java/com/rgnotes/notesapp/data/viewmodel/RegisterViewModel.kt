@@ -2,7 +2,9 @@ package com.rgnotes.notesapp.data.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rgnotes.notesapp.data.User
 import com.rgnotes.notesapp.data.repo.RepositoryAuthInterface
+import com.rgnotes.notesapp.data.repo.RepositoryDataInterface
 import com.rgnotes.notesapp.data.status.AuthStatus
 import com.rgnotes.notesapp.data.status.Status
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +16,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class RegisterViewModel @Inject constructor(private val authRepo: RepositoryAuthInterface) :
+class RegisterViewModel @Inject constructor(private val authRepo: RepositoryAuthInterface,private val dataRepo: RepositoryDataInterface) :
     ViewModel() {
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
     private val _status = MutableSharedFlow<Status?>(replay = 1)
@@ -47,14 +49,16 @@ class RegisterViewModel @Inject constructor(private val authRepo: RepositoryAuth
         } else (return true)
     }
 
-    fun registerUser(email: String?, password: String?) {
+    fun registerUser(email: String?, password: String?, user: User) {
         viewModelScope.launch {
             withContext(ioDispatcher) {
                 if (isEmailValid(email) && isPasswordValid(password)) {
                     authRepo.registerUser(email!!, password!!).collect { _status.emit(it) }
                 }
             }
+            withContext(ioDispatcher) {
+                dataRepo.setUserData(user).collect { _status.emit(it) }
+            }
         }
-
     }
 }

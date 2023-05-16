@@ -17,7 +17,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:text="Hello!"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textSize="110sp"
         android:autoSizeTextType="uniform"
         app:layout_constraintBottom_toTopOf="@+id/emailinputter"
