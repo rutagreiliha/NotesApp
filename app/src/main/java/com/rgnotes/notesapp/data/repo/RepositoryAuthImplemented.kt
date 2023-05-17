@@ -30,4 +30,7 @@ class RepositoryAuthImplemented @Inject constructor(private val firebaseAuth: Fi
     override suspend fun isUserSignedIn(): Flow<AuthStatus> {
         return firebaseAuth.isUserSignedIn()
     }
+    override suspend fun reAuthenticate(password: String): Flow<AuthStatus> {
+        return firebaseAuth.reAuthenticate(password)
+    }
 }

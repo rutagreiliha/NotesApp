@@ -39,7 +39,7 @@ class RegisterFragment : Fragment() {
 
             createaccountbutton.setOnClickListener {
                 var email = emailinputregister.text.toString()
-                if(email.last() == ' '){email = email.dropLast(1)}
+               if (email.isNotEmpty()){if(email.last() == ' '){email = email.dropLast(1)}}
                 val password = passwordinputregister.text.toString()
                 user.name = usernameinput.text.toString()
                 viewmodel.registerUser(email, password,user)

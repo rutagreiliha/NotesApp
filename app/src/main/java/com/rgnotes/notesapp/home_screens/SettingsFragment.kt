@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -53,8 +54,19 @@ class SettingsFragment : Fragment() {
 
                                 viewmodel.clearUpdate()
                             }
+                            is AuthStatus.ReAuthenticate<*> -> {
+
+                                viewmodel.deleteAccount()
+
+                                viewmodel.clearUpdate()
+                            }
                             is AuthStatus.Error -> {
-                                findNavController().navigate(R.id.action_settingsFragment_to_homeFragment)
+                                Toast.makeText(
+                                    requireContext().applicationContext,
+                                    it.message as String,
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
 
                                 viewmodel.clearUpdate()
                             }
@@ -90,10 +102,13 @@ class SettingsFragment : Fragment() {
 
             deleteaccount.setOnClickListener {
                 val confirmationDialog = android.app.AlertDialog.Builder(requireContext())
-                confirmationDialog.setMessage("Are you sure you want to permanently delete your account?")
-                    .setCancelable(true).setPositiveButton("Delete") { _, _ ->
+                val inflater = requireActivity().layoutInflater
+                val view = inflater.inflate(R.layout.dialog_deleteaccount, null)
+                confirmationDialog.setView(view).setMessage("Confirm your password to delete your account")
+                    .setCancelable(true).setPositiveButton("Delete my account") { _, _ ->
+                        val password = view.findViewById<EditText>(R.id.password).text.toString()
 
-                        viewmodel.deleteAccount()
+                        viewmodel.reAuthenticate(password)
 
                     }.setNegativeButton("Back") { dialog, _ -> dialog.dismiss() }
 

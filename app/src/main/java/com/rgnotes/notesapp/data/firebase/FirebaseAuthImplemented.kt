@@ -16,7 +16,7 @@ class FirebaseAuthImplemented : FirebaseAuthInterface {
             }
 
         } catch (e: Exception) {
-            emit(AuthStatus.Error(e.toString()))
+            emit(AuthStatus.Error(e.toString().split(":")[1]))
         }
 
     }
@@ -29,7 +29,7 @@ class FirebaseAuthImplemented : FirebaseAuthInterface {
             }
 
         } catch (e: Exception) {
-            emit(AuthStatus.Error(e.toString()))
+            emit(AuthStatus.Error(e.toString().split(":")[1]))
         }
     }
 
@@ -39,7 +39,7 @@ class FirebaseAuthImplemented : FirebaseAuthInterface {
                 .let { emit(AuthStatus.Success("Check your email!")) }
 
         } catch (e: Exception) {
-            emit(AuthStatus.Error(e.toString()))
+            emit(AuthStatus.Error(e.toString().split(":")[1]))
         }
     }
 
@@ -49,7 +49,7 @@ class FirebaseAuthImplemented : FirebaseAuthInterface {
             emit(AuthStatus.Success("Success!"))
 
         } catch (e: Exception) {
-            emit(AuthStatus.Error(e.toString()))
+            emit(AuthStatus.Error(e.toString().split(":")[1]))
         }
     }
 
@@ -62,7 +62,7 @@ class FirebaseAuthImplemented : FirebaseAuthInterface {
             }
 
         } catch (e: Exception) {
-            emit(AuthStatus.Error(e.toString()))
+            emit(AuthStatus.Error(e.toString().split(":")[1]))
         }
     }
 
@@ -76,7 +76,20 @@ class FirebaseAuthImplemented : FirebaseAuthInterface {
             }
 
         } catch (e: Exception) {
-            emit(AuthStatus.Error(e.toString()))
+            emit(AuthStatus.Error(e.toString().split(":")[1]))
+        }
+    }
+
+    override suspend fun reAuthenticate(password: String): Flow<AuthStatus> =flow {
+        try {
+            val email = Firebase.auth.currentUser!!.email!!
+            val user = Firebase.auth.signInWithEmailAndPassword(email, password).await().user
+            if (user != null) {
+                emit(AuthStatus.ReAuthenticate(user))
+            }
+
+        } catch (e: Exception) {
+            emit(AuthStatus.Error(e.toString().split(":")[1]))
         }
     }
 }

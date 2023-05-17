@@ -36,6 +36,13 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    fun reAuthenticate(password:String){
+        viewModelScope.launch {
+            withContext(ioDispatcher) {
+                authRepository.reAuthenticate(password).collect { _status.emit(it) }
+            }
+        }
+    }
     fun deleteAccount() {
         viewModelScope.launch {
             withContext(ioDispatcher) {
