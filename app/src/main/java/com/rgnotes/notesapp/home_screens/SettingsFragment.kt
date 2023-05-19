@@ -13,7 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.rgnotes.notesapp.R
-import com.rgnotes.notesapp.data.User
+import com.rgnotes.notesapp.data.utils.User
 import com.rgnotes.notesapp.data.status.AuthStatus
 import com.rgnotes.notesapp.data.status.DataStatus
 import com.rgnotes.notesapp.data.viewmodel.SettingsViewModel
@@ -42,45 +42,56 @@ class SettingsFragment : Fragment() {
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewmodel.status.collectLatest {
                         when (it) {
+                            is AuthStatus.Loading -> {
+                                progress.visibility = View.VISIBLE
+                                viewmodel.clearUpdate()
+                            }
+                            is DataStatus.Loading -> {
+                                progress.visibility = View.VISIBLE
+                                viewmodel.clearUpdate()
+                            }
                             is AuthStatus.GetData<*> -> {
+                                progress.visibility = View.GONE
                                 val userdata = it.data as User
                                 val name = userdata.name
-                                if(name!=null&&name!=""){hiuser.text="Hi, $name"}
+                                if (name != null && name != "") {
+                                    hiuser.text = "Hi, $name"
+                                }
                                 viewmodel.clearUpdate()
                             }
                             is AuthStatus.Success<*> -> {
-
+                                progress.visibility = View.GONE
                                 findNavController().navigate(R.id.action_settingsFragment_to_homeFragment)
-
                                 viewmodel.clearUpdate()
                             }
                             is AuthStatus.ReAuthenticate<*> -> {
-
+                                progress.visibility = View.GONE
                                 viewmodel.deleteAccount()
-
                                 viewmodel.clearUpdate()
                             }
                             is AuthStatus.Error -> {
+                                progress.visibility = View.GONE
                                 Toast.makeText(
                                     requireContext().applicationContext,
                                     it.message as String,
                                     Toast.LENGTH_SHORT
                                 )
                                     .show()
-
                                 viewmodel.clearUpdate()
                             }
                             is DataStatus.Error -> {
+                                progress.visibility = View.GONE
                                 Toast.makeText(
                                     requireContext().applicationContext,
                                     it.message as String,
                                     Toast.LENGTH_SHORT
                                 )
                                     .show()
-
                                 viewmodel.clearUpdate()
                             }
-                            else -> {}
+                            else -> {
+                                viewmodel.clearUpdate()
+                            }
                         }
                     }
                 }
@@ -91,11 +102,8 @@ class SettingsFragment : Fragment() {
                 val confirmationDialog = android.app.AlertDialog.Builder(requireContext())
                 confirmationDialog.setMessage("Are you sure you want to sign out?")
                     .setCancelable(true).setPositiveButton("Sign out") { _, _ ->
-
                         viewmodel.signOut()
-
                     }.setNegativeButton("Back") { dialog, _ -> dialog.dismiss() }
-
                 confirmationDialog.create().show()
             }
 
@@ -104,18 +112,14 @@ class SettingsFragment : Fragment() {
                 val confirmationDialog = android.app.AlertDialog.Builder(requireContext())
                 val inflater = requireActivity().layoutInflater
                 val view = inflater.inflate(R.layout.dialog_deleteaccount, null)
-                confirmationDialog.setView(view).setMessage("Confirm your password to delete your account")
+                confirmationDialog.setView(view)
+                    .setMessage("Confirm your password to delete your account")
                     .setCancelable(true).setPositiveButton("Delete my account") { _, _ ->
                         val password = view.findViewById<EditText>(R.id.password).text.toString()
-
                         viewmodel.reAuthenticate(password)
-
                     }.setNegativeButton("Back") { dialog, _ -> dialog.dismiss() }
-
                 confirmationDialog.create().show()
             }
-
-
         }
         return binding?.root
     }

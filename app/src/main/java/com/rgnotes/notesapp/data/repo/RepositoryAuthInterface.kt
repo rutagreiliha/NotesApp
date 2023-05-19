@@ -10,5 +10,5 @@ interface RepositoryAuthInterface {
     suspend fun deleteAccount(): Flow<AuthStatus>
     suspend fun signOutUser(): Flow<AuthStatus>
     suspend fun isUserSignedIn(): Flow<AuthStatus>
-    suspend fun reAuthenticate(password:String): Flow<AuthStatus>
+    suspend fun reAuthenticate(password: String): Flow<AuthStatus>
 }

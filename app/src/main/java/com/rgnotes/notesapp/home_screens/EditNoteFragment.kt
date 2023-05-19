@@ -14,7 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.rgnotes.notesapp.R
-import com.rgnotes.notesapp.data.Note
+import com.rgnotes.notesapp.data.utils.Note
 import com.rgnotes.notesapp.data.status.DataStatus
 import com.rgnotes.notesapp.data.viewmodel.EditNoteViewModel
 import com.rgnotes.notesapp.databinding.FragmentEditNoteBinding
@@ -34,9 +34,6 @@ class EditNoteFragment : Fragment() {
     private val binding get() = _binding
     private var noteId: String? = null
     private var note: Note = Note()
-    override fun onStart() {
-        super.onStart()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,7 +46,12 @@ class EditNoteFragment : Fragment() {
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewmodel.status.collectLatest {
                         when (it) {
+                            is DataStatus.Loading -> {
+                                progress.visibility = View.VISIBLE
+                                viewmodel.clearUpdate()
+                            }
                             is DataStatus.SetNote<*> -> {
+                                progress.visibility = View.GONE
                                 Toast.makeText(
                                     requireContext().applicationContext,
                                     it.data as String,
@@ -60,14 +62,14 @@ class EditNoteFragment : Fragment() {
                                 viewmodel.clearUpdate()
                             }
                             is DataStatus.GetNote<*> -> {
+                                progress.visibility = View.GONE
                                 note = it.data as Note
                                 notetitle.setText(note.title)
                                 notebody.setText(note.body)
-
-
                                 viewmodel.clearUpdate()
                             }
                             is DataStatus.DeleteNote<*> -> {
+                                progress.visibility = View.GONE
                                 Toast.makeText(
                                     requireContext().applicationContext,
                                     it.data as String,
@@ -78,16 +80,18 @@ class EditNoteFragment : Fragment() {
                                 viewmodel.clearUpdate()
                             }
                             is DataStatus.Error -> {
+                                progress.visibility = View.GONE
                                 Toast.makeText(
                                     requireContext().applicationContext,
                                     it.message as String,
                                     Toast.LENGTH_SHORT
                                 )
                                     .show()
-
                                 viewmodel.clearUpdate()
                             }
-                            else -> {}
+                            else -> {
+                                viewmodel.clearUpdate()
+                            }
                         }
                     }
                 }
@@ -100,16 +104,13 @@ class EditNoteFragment : Fragment() {
                 val toolbar: Toolbar = toolbar as Toolbar
                 toolbar.inflateMenu(R.menu.edit_menu_action_bar)
                 toolbar.setOnMenuItemClickListener {
-                    // Handle item selection
                     when (it.itemId) {
                         R.id.delete -> {
                             val confirmationDialog = AlertDialog.Builder(requireContext())
                             confirmationDialog.setMessage("Are you sure you want to delete this note?")
                                 .setCancelable(true).setPositiveButton("Delete") { _, _ ->
                                     viewmodel.deleteNote(id)
-
                                 }.setNegativeButton("Back") { dialog, _ -> dialog.dismiss() }
-
                             confirmationDialog.create().show()
                             true
                         }
@@ -126,19 +127,14 @@ class EditNoteFragment : Fragment() {
                 note.body = notebody.text.toString()
                 note.dateTime = LocalDateTime.now().toString()
                 if (id == null) {
-
                     viewmodel.createNote(note)
                 } else {
                     viewmodel.updateNote(id, note)
                 }
             }
-
-
         }
-
         return binding?.root
     }
-
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

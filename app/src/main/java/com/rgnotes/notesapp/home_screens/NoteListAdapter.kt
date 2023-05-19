@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.rgnotes.notesapp.R
-import com.rgnotes.notesapp.data.Note
+import com.rgnotes.notesapp.data.utils.Note
 
 class NoteListAdapter(private val noteTitleList: ArrayList<Note>) :
     RecyclerView.Adapter<NoteListAdapter.ViewHolder>() {
@@ -43,7 +43,7 @@ class NoteListAdapter(private val noteTitleList: ArrayList<Note>) :
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.textView.text = noteTitleList[position].title.toString()
         viewHolder.textViewBody.text = noteTitleList[position].body.toString()
-        viewHolder.textViewDate.text =formatDateTime(noteTitleList[position].dateTime)
+        viewHolder.textViewDate.text = formatDateTime(noteTitleList[position].dateTime)
     }
 
     override fun getItemCount() = noteTitleList.size

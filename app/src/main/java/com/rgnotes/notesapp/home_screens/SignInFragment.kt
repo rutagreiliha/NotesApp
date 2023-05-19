@@ -29,16 +29,12 @@ class SignInFragment : Fragment() {
     private val viewmodel: SignInViewModel by activityViewModels()
     private var _binding: FragmentSignInBinding? = null
     private val binding get() = _binding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-
-            }
+            override fun handleOnBackPressed() {}
         })
     }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,11 +42,40 @@ class SignInFragment : Fragment() {
         _binding = FragmentSignInBinding.inflate(inflater, container, false)
         binding?.apply {
 
+            viewLifecycleOwner.lifecycleScope.launch(mainDispatcher) {
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewmodel.status.collectLatest {
+                        when (it) {
+                            is AuthStatus.Loading -> {
+                                progress.visibility = View.VISIBLE
+                                viewmodel.clearUpdate()
+                            }
+                            is AuthStatus.Success<*> -> {
+                                progress.visibility = View.GONE
+                                findNavController().popBackStack()
+                                viewmodel.clearUpdate()
+                            }
+                            is AuthStatus.Error -> {
+                                progress.visibility = View.GONE
+                                Toast.makeText(
+                                    requireContext().applicationContext,
+                                    it.message as String,
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                                viewmodel.clearUpdate()
+                            }
+                            else -> {
+                                viewmodel.clearUpdate()
+                            }
+                        }
+                    }
+                }
+            }
             signinbutton.setOnClickListener {
                 val email = emailinput.text.toString()
                 val password = passwordinput.text.toString()
                 viewmodel.signInUser(email, password)
-
             }
             registerButton.setOnClickListener {
                 findNavController().navigate(R.id.action_signInFragment_to_registerFragment)
@@ -58,34 +83,7 @@ class SignInFragment : Fragment() {
             forgotPassword.setOnClickListener {
                 findNavController().navigate(R.id.action_signInFragment_to_resetPasswordFragment)
             }
-
-            viewLifecycleOwner.lifecycleScope.launch(mainDispatcher) {
-                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    viewmodel.status.collectLatest {
-                        when (it) {
-                            is AuthStatus.Success<*> -> {
-
-                                findNavController().popBackStack()
-
-                                viewmodel.clearUpdate()
-                            }
-                            is AuthStatus.Error -> {
-                                Toast.makeText(
-                                    requireContext().applicationContext,
-                                    it.message as String,
-                                    Toast.LENGTH_SHORT
-                                )
-                                    .show()
-
-                                viewmodel.clearUpdate()
-                            }
-                            else -> {}
-                        }
-                    }
-                }
-            }
         }
-
         return binding?.root
     }
 

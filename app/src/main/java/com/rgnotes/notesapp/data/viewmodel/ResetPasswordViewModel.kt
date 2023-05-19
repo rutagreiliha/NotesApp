@@ -26,17 +26,16 @@ class ResetPasswordViewModel @Inject constructor(private val authRepo: Repositor
 
     private suspend fun isEmailValid(email: String?): Boolean {
         if (email.isNullOrEmpty()) {
-            _status.emit(AuthStatus.Error("Please enter your email!"))
+            _status.emit(AuthStatus.Error("Email can't be empty!"))
             return false
-        } else if (!email.contains('@') && !email.contains('.')) {
-            _status.emit(AuthStatus.Error("Invalid format!"))
+        } else if ("@" !in email || "." !in email) {
+            _status.emit(AuthStatus.Error("Invalid email format!"))
             return false
         } else if (email.count() < 4) {
-            _status.emit(AuthStatus.Error("Invalid format!"))
+            _status.emit(AuthStatus.Error("Invalid email format!"))
             return false
         } else (return true)
     }
-
 
     fun resetPassword(email: String?) {
         viewModelScope.launch {
@@ -46,6 +45,5 @@ class ResetPasswordViewModel @Inject constructor(private val authRepo: Repositor
                 }
             }
         }
-
     }
 }

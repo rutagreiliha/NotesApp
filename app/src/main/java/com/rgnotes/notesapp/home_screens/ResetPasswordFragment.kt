@@ -32,16 +32,16 @@ class ResetPasswordFragment : Fragment() {
         _binding = FragmentResetPasswordBinding.inflate(inflater, container, false)
         binding?.apply {
 
-            resetpasswordbutton.setOnClickListener {
-                val email = email.text.toString()
-                viewmodel.resetPassword(email)
-            }
-
             viewLifecycleOwner.lifecycleScope.launch(mainDispatcher) {
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewmodel.status.collectLatest {
                         when (it) {
+                            is AuthStatus.Loading -> {
+                                progress.visibility = View.VISIBLE
+                                viewmodel.clearUpdate()
+                            }
                             is AuthStatus.Success<*> -> {
+                                progress.visibility = View.GONE
                                 Toast.makeText(
                                     requireContext().applicationContext,
                                     it.data as String,
@@ -52,6 +52,7 @@ class ResetPasswordFragment : Fragment() {
                                 viewmodel.clearUpdate()
                             }
                             is AuthStatus.Error -> {
+                                progress.visibility = View.GONE
                                 Toast.makeText(
                                     requireContext().applicationContext,
                                     it.message as String,
@@ -61,10 +62,16 @@ class ResetPasswordFragment : Fragment() {
 
                                 viewmodel.clearUpdate()
                             }
-                            else -> {}
+                            else -> {
+                                viewmodel.clearUpdate()
+                            }
                         }
                     }
                 }
+            }
+            resetpasswordbutton.setOnClickListener {
+                val email = email.text.toString()
+                viewmodel.resetPassword(email)
             }
         }
 

@@ -2,7 +2,7 @@ package com.rgnotes.notesapp.data.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rgnotes.notesapp.data.User
+import com.rgnotes.notesapp.data.utils.User
 import com.rgnotes.notesapp.data.repo.RepositoryAuthInterface
 import com.rgnotes.notesapp.data.repo.RepositoryDataInterface
 import com.rgnotes.notesapp.data.status.AuthStatus
@@ -16,7 +16,10 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class RegisterViewModel @Inject constructor(private val authRepo: RepositoryAuthInterface,private val dataRepo: RepositoryDataInterface) :
+class RegisterViewModel @Inject constructor(
+    private val authRepo: RepositoryAuthInterface,
+    private val dataRepo: RepositoryDataInterface
+) :
     ViewModel() {
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
     private val _status = MutableSharedFlow<Status?>(replay = 1)
@@ -28,20 +31,20 @@ class RegisterViewModel @Inject constructor(private val authRepo: RepositoryAuth
 
     private suspend fun isEmailValid(email: String?): Boolean {
         if (email.isNullOrEmpty()) {
-            _status.emit(AuthStatus.Error("Please enter your email!"))
+            _status.emit(AuthStatus.Error("Email can't be empty!"))
             return false
-        } else if (!email.contains('@') && !email.contains('.')) {
-            _status.emit(AuthStatus.Error("Invalid format!"))
+        } else if ("@" !in email || "." !in email) {
+            _status.emit(AuthStatus.Error("Invalid email format!"))
             return false
         } else if (email.count() < 4) {
-            _status.emit(AuthStatus.Error("Invalid format!"))
+            _status.emit(AuthStatus.Error("Invalid email format!"))
             return false
         } else (return true)
     }
 
     private suspend fun isPasswordValid(password: String?): Boolean {
         if (password.isNullOrEmpty()) {
-            _status.emit(AuthStatus.Error("Please enter a password!"))
+            _status.emit(AuthStatus.Error("Password can't be empty!"))
             return false
         } else if (password.count() < 6) {
             _status.emit(AuthStatus.Error("Password must be at least 6 characters!"))
@@ -51,13 +54,13 @@ class RegisterViewModel @Inject constructor(private val authRepo: RepositoryAuth
 
     fun registerUser(email: String?, password: String?, user: User) {
         viewModelScope.launch {
-            withContext(ioDispatcher) {
-                if (isEmailValid(email) && isPasswordValid(password)) {
+            if (isEmailValid(email) && isPasswordValid(password)) {
+                withContext(ioDispatcher) {
                     authRepo.registerUser(email!!, password!!).collect { _status.emit(it) }
                 }
-            }
-            withContext(ioDispatcher) {
-                dataRepo.setUserData(user).collect { _status.emit(it) }
+                withContext(ioDispatcher) {
+                    dataRepo.setUserData(user).collect { _status.emit(it) }
+                }
             }
         }
     }

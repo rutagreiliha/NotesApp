@@ -4,8 +4,11 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -15,7 +18,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rgnotes.notesapp.R
-import com.rgnotes.notesapp.data.Note
+import com.rgnotes.notesapp.data.utils.Note
 import com.rgnotes.notesapp.data.status.AuthStatus
 import com.rgnotes.notesapp.data.status.DataStatus
 import com.rgnotes.notesapp.data.viewmodel.HomeViewModel
@@ -37,10 +40,35 @@ class HomeFragment : Fragment() {
     var notes: ArrayList<Note> = arrayListOf()
     private val adapter = NoteListAdapter(notes)
     private var currentOrder = "Newest first"
+    var counter:Int = 0
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if(counter == 0){
+                    Toast.makeText(
+                        requireContext().applicationContext,
+                        "Press again to exit!",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                    counter = 1
+                }
+                else{
+                    requireActivity().finish()
+                    counter = 0
+                }
+
+
+            }
+        })
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        counter=0
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         binding?.apply {
 
@@ -48,7 +76,16 @@ class HomeFragment : Fragment() {
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewmodel.status.collectLatest {
                         when (it) {
+                            is AuthStatus.Loading -> {
+                                progress.visibility = VISIBLE
+                                viewmodel.clearUpdate()
+                            }
+                            is DataStatus.Loading -> {
+                                progress.visibility = VISIBLE
+                                viewmodel.clearUpdate()
+                            }
                             is DataStatus.GetNote<*> -> {
+                                progress.visibility = GONE
                                 notes.clear()
                                 notes.addAll(it.data as ArrayList<Note>)
                                 if (currentOrder == "Newest first") {
@@ -56,40 +93,35 @@ class HomeFragment : Fragment() {
                                 } else {
                                     notes.sortBy { it.dateTime }
                                 }
-
                                 adapter.notifyDataSetChanged()
-
-
                                 viewmodel.clearUpdate()
                             }
                             is AuthStatus.Success<*> -> {
-
                                 viewmodel.readAllNotes()
-
                                 viewmodel.clearUpdate()
                             }
                             is AuthStatus.Error -> {
+                                progress.visibility = GONE
                                 findNavController().navigate(R.id.action_homeFragment_to_signInFragment)
-
                                 viewmodel.clearUpdate()
                             }
                             is DataStatus.Error -> {
+                                progress.visibility = GONE
                                 Toast.makeText(
                                     requireContext().applicationContext,
                                     it.message as String,
                                     Toast.LENGTH_SHORT
                                 )
                                     .show()
-
                                 viewmodel.clearUpdate()
                             }
-                            else -> {}
+                            else -> {
+                                viewmodel.clearUpdate()
+                            }
                         }
                     }
                 }
             }
-
-
             viewmodel.isUserSignedIn()
             notesRecyclerView.adapter = adapter
             notesRecyclerView.setHasFixedSize(true)
@@ -102,26 +134,30 @@ class HomeFragment : Fragment() {
                 when (it.itemId) {
                     R.id.sort -> {
                         val confirmationDialog = android.app.AlertDialog.Builder(requireContext())
-                        val orders = arrayOf("Newest first", "Oldest first","A to Z","Z to A")
+                        val orders = arrayOf("Newest first", "Oldest first", "A to Z", "Z to A")
                         confirmationDialog.setTitle("Sort by")
                             .setItems(orders, DialogInterface.OnClickListener { dialog, which ->
                                 when (orders[which]) {
                                     "Newest first" -> {
+                                        counter=0
                                         currentOrder = "Newest first"
                                         notes.sortByDescending { it.dateTime }
                                         adapter.notifyDataSetChanged()
                                     }
                                     "Oldest first" -> {
+                                        counter=0
                                         currentOrder = "Oldest first"
                                         notes.sortBy { it.dateTime }
                                         adapter.notifyDataSetChanged()
                                     }
                                     "A to Z" -> {
-                                        currentOrder =  "A to Z"
+                                        counter=0
+                                        currentOrder = "A to Z"
                                         notes.sortBy { it.title }
                                         adapter.notifyDataSetChanged()
                                     }
                                     "Z to A" -> {
+                                        counter=0
                                         currentOrder = "Z to A"
                                         notes.sortByDescending { it.title }
                                         adapter.notifyDataSetChanged()
@@ -129,7 +165,7 @@ class HomeFragment : Fragment() {
                                 }
                             })
                         confirmationDialog.setNegativeButton("Back", null)
-                        val dialog = confirmationDialog.create().show()
+                        confirmationDialog.create().show()
                         true
                     }
                     R.id.manageaccount -> {
@@ -142,8 +178,6 @@ class HomeFragment : Fragment() {
                 }
             }
 
-
-
             adapter.setOnItemClickListener(object : NoteListAdapter.onItemClickListener {
                 override fun onItemClick(position: Int) {
                     val result = notes[position].id
@@ -153,17 +187,12 @@ class HomeFragment : Fragment() {
                 }
             })
 
-
             add.setOnClickListener {
                 findNavController().navigate(R.id.action_homeFragment_to_editNoteFragment)
             }
-
-
         }
-
         return binding?.root
     }
-
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

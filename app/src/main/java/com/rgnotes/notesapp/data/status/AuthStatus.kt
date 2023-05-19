@@ -1,6 +1,7 @@
 package com.rgnotes.notesapp.data.status
 
 sealed class AuthStatus : Status() {
+    class Loading() : AuthStatus()
     class Success<T>(val data: T) : AuthStatus()
     class SetData<T>(val data: T) : AuthStatus()
     class GetData<T>(val data: T) : AuthStatus()

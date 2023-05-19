@@ -13,6 +13,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             app:title="Edit Note"
@@ -20,10 +21,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:elevation="4dp"
-            android:background="#ffffff"/>
+            android:background="#ffffff" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="20dp" />
+
         <com.google.android.material.textfield.TextInputLayout
             android:autoSizeTextType="uniform"
             android:id="@+id/titlelayout"
@@ -34,8 +37,7 @@
             android:layout_height="wrap_content"
             android:textColorHint="#8a8a8a"
             app:hintTextColor="#8a8a8a"
-            android:hint="Title"
-            >
+            android:hint="Title">
 
             <EditText
                 android:autoSizeTextType="uniform"
@@ -91,11 +93,17 @@
             android:layout_height="wrap_content"
             android:gravity="center|center_vertical"
             android:text="Save"
-            android:textSize="20sp"/>
+            android:textSize="20sp" />
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_gravity="center" />
 
 
     </LinearLayout>
-
 
 
 </androidx.core.widget.NestedScrollView>

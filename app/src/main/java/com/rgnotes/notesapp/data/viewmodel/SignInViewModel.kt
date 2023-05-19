@@ -26,20 +26,20 @@ class SignInViewModel @Inject constructor(private val authRepo: RepositoryAuthIn
 
     private suspend fun isEmailValid(email: String?): Boolean {
         if (email.isNullOrEmpty()) {
-            _status.emit(AuthStatus.Error("Please enter your email!"))
+            _status.emit(AuthStatus.Error("Email can't be empty!"))
             return false
-        } else if (!email.contains('@') && !email.contains('.')) {
-            _status.emit(AuthStatus.Error("Invalid format!"))
+        } else if ("@" !in email || "." !in email) {
+            _status.emit(AuthStatus.Error("Invalid email format!"))
             return false
         } else if (email.count() < 4) {
-            _status.emit(AuthStatus.Error("Invalid format!"))
+            _status.emit(AuthStatus.Error("Invalid email format!"))
             return false
         } else (return true)
     }
 
     private suspend fun isPasswordValid(password: String?): Boolean {
         if (password.isNullOrEmpty()) {
-            _status.emit(AuthStatus.Error("Please enter your password!"))
+            _status.emit(AuthStatus.Error("Password can't be empty!"))
             return false
         } else if (password.count() < 6) {
             _status.emit(AuthStatus.Error("Password must be at least 6 characters!"))
@@ -49,12 +49,11 @@ class SignInViewModel @Inject constructor(private val authRepo: RepositoryAuthIn
 
     fun signInUser(email: String?, password: String?) {
         viewModelScope.launch {
-            withContext(ioDispatcher) {
-                if (isEmailValid(email) && isPasswordValid(password)) {
+            if (isEmailValid(email) and isPasswordValid(password)) {
+                withContext(ioDispatcher) {
                     authRepo.signInUser(email!!, password!!).collect { _status.emit(it) }
                 }
             }
         }
-
     }
 }

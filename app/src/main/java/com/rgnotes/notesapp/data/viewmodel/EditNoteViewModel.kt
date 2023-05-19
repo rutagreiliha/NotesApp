@@ -2,7 +2,7 @@ package com.rgnotes.notesapp.data.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rgnotes.notesapp.data.Note
+import com.rgnotes.notesapp.data.utils.Note
 import com.rgnotes.notesapp.data.repo.RepositoryDataInterface
 import com.rgnotes.notesapp.data.status.DataStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
