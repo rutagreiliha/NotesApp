@@ -88,6 +88,7 @@ class HomeFragment : Fragment() {
                                 progress.visibility = GONE
                                 notes.clear()
                                 notes.addAll(it.data as ArrayList<Note>)
+                                if(notes.isEmpty()){nonotes.visibility= VISIBLE}
                                 if (currentOrder == "Newest first") {
                                     notes.sortByDescending { it.dateTime }
                                 } else {
