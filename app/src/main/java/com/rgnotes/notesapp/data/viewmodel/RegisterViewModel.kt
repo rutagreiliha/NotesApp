@@ -12,6 +12,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -23,11 +25,11 @@ class RegisterViewModel @Inject constructor(
 ) :
     ViewModel() {
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-    private val _status = MutableSharedFlow<Status?>(replay = 1)
-    val status: MutableSharedFlow<Status?> = _status
+    private val _status = MutableStateFlow<Status?>(AuthStatus.Initial())
+    val status= _status.asStateFlow()
 
     suspend fun clearUpdate() {
-        _status.emit(null)
+        _status.value =null
     }
 
     fun registerUser(email: String?, password: String?, user: User) {
@@ -35,13 +37,13 @@ class RegisterViewModel @Inject constructor(
             if (Validate.email(email)) {
                 if(Validate.password(password)){
                     withContext(ioDispatcher) {
-                        authRepo.registerUser(email!!, password!!).collect { _status.emit(it) }
+                        authRepo.registerUser(email!!, password!!).collect { _status.value =it }
                     }
                     withContext(ioDispatcher) {
-                        dataRepo.setUserData(user).collect { _status.emit(it) }
+                        dataRepo.setUserData(user).collect { _status.value =it }
                     }
-                }else{ _status.emit(AuthStatus.Error("Invalid password format!"))}
-            }else{ _status.emit(AuthStatus.Error("Invalid email format!"))}
+                }else{ _status.value =AuthStatus.Error("Invalid password format!")}
+            }else{_status.value =AuthStatus.Error("Invalid email format!")}
         }
     }
 }

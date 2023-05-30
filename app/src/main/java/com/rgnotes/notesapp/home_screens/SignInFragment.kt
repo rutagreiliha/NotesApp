@@ -32,7 +32,9 @@ class SignInFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {}
+            override fun handleOnBackPressed() {
+
+            }
         })
     }
     override fun onCreateView(
@@ -84,6 +86,7 @@ class SignInFragment : Fragment() {
                 findNavController().navigate(R.id.action_signInFragment_to_resetPasswordFragment)
             }
         }
+
         return binding?.root
     }
 

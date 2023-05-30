@@ -10,6 +10,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -18,19 +20,19 @@ import javax.inject.Inject
 class ResetPasswordViewModel @Inject constructor(private val authRepo: RepositoryAuthInterface) :
     ViewModel() {
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-    private val _status = MutableSharedFlow<Status?>(replay = 1)
-    val status: MutableSharedFlow<Status?> = _status
+    private val _status = MutableStateFlow<Status?>(AuthStatus.Initial())
+    val status= _status.asStateFlow()
 
     suspend fun clearUpdate() {
-        _status.emit(null)
+        _status.value =null
     }
 fun resetPassword(email: String?) {
         viewModelScope.launch {
             if (Validate.email(email)) {
                     withContext(ioDispatcher) {
-                        authRepo.resetPassword(email!!).collect { _status.emit(it) }
+                        authRepo.resetPassword(email!!).collect { _status.value =it }
                     }
-            }else{ _status.emit(AuthStatus.Error("Invalid email format!"))}
+            }else{ _status.value =AuthStatus.Error("Invalid email format!")}
         }
     }
 }
