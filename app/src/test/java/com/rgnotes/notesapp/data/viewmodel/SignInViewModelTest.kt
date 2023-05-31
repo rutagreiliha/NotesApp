@@ -6,14 +6,14 @@ import com.rgnotes.notesapp.data.status.AuthStatus
 import com.rgnotes.notesapp.data.status.Status
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.*
+import org.hamcrest.core.IsInstanceOf.instanceOf
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -33,30 +33,25 @@ class SignInViewModelTest {
 
     }
 
-//TODO: test flow
-
-
     @Test
     fun sign_in_function_when_correct_login_returns_auth_success_state(){
-
-        runTest(UnconfinedTestDispatcher()) {
-            viewModel = SignInViewModel(repo,UnconfinedTestDispatcher())
-            val job = launch { whenever(repo.signInUser("email.email@email.com","password123")).thenReturn(
-                flowOf(AuthStatus.Success("1"))
-            ) }
-
-            val expected = AuthStatus.Success("1")
-            viewModel.signInUser("email.email@email.com","password123")
-            advanceUntilIdle()
-            viewModel.status.test {
-                val actual = viewModel.status.value
-                assertEquals(expected, actual)
-                job.cancel()
+        runTest (UnconfinedTestDispatcher()) {
+             whenever(repo.signInUser("email.email@email.com","password123")).thenReturn(
+                flowOf(AuthStatus.Initial(),AuthStatus.Success("1"))
+            )
+            val actual = mutableListOf<Status>()
+            val job = launch{
+                viewModel.signInUser("email.email@email.com","password123")
+                 viewModel.status.collect{it ->
+                     if (it != null) {
+                         actual.add(it)
+                     }
+                 }
             }
-
-
+            assertThat(actual[0], instanceOf(AuthStatus.Initial::class.java))
+            assertThat(actual[1], instanceOf(AuthStatus.Success::class.java))
+            job.cancel()
     }
-
 }
 @After
 fun tearDown() {
