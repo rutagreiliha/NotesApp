@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import com.rgnotes.notesapp.data.repo.RepositoryAuthInterface
 import com.rgnotes.notesapp.data.status.AuthStatus
 import com.rgnotes.notesapp.data.status.Status
+import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
@@ -48,8 +49,8 @@ class SignInViewModelTest {
                      }
                  }
             }
-            assertThat(actual[0], instanceOf(AuthStatus.Initial::class.java))
-            assertThat(actual[1], instanceOf(AuthStatus.Success::class.java))
+            assertTrue(actual[0] is AuthStatus.Initial)
+            assertTrue(actual[1] is AuthStatus.Success<*>)
             job.cancel()
     }
 }
