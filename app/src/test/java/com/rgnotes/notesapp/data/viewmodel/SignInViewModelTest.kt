@@ -3,6 +3,7 @@ package com.rgnotes.notesapp.data.viewmodel
 import com.rgnotes.notesapp.data.repo.RepositoryAuthInterface
 import com.rgnotes.notesapp.data.status.AuthStatus
 import com.rgnotes.notesapp.data.status.Status
+import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -34,7 +35,7 @@ class SignInViewModelTest {
     fun sign_in_function_when_correct_login_returns_loading_then_auth_success_state() {
         runTest(UnconfinedTestDispatcher()) {
             whenever(repo.signInUser("email.email@email.com", "password123")).thenReturn(
-                flowOf(AuthStatus.Initial(), AuthStatus.Success("userid"))
+                flowOf(AuthStatus.Initial, AuthStatus.Success("userid"))
             )
             val actual = mutableListOf<Status>()
             val job = launch {
@@ -45,8 +46,8 @@ class SignInViewModelTest {
                     }
                 }
             }
-            assertTrue(actual[0] is AuthStatus.Initial)
-            assertTrue(actual[1] is AuthStatus.Success<*>)
+            assertEquals(actual[0], AuthStatus.Initial)
+            assertEquals(actual[1],AuthStatus.Success("userid"))
             job.cancel()
         }
     }
@@ -55,10 +56,10 @@ class SignInViewModelTest {
     fun sign_in_function_when_wrong_login_returns_loading_then_auth_error_state() {
         runTest(UnconfinedTestDispatcher()) {
             whenever(repo.signInUser("email.email@email.com", "password123")).thenReturn(
-                flowOf(AuthStatus.Initial(), AuthStatus.Success("userid"))
+                flowOf(AuthStatus.Initial, AuthStatus.Success("userid"))
             )
             whenever(repo.signInUser("wrong.email@email.com", "password123")).thenReturn(
-                flowOf(AuthStatus.Initial(), AuthStatus.Error("error"))
+                flowOf(AuthStatus.Initial, AuthStatus.Error("error"))
             )
             val actual = mutableListOf<Status>()
             val job = launch {
@@ -69,8 +70,8 @@ class SignInViewModelTest {
                     }
                 }
             }
-            assertTrue(actual[0] is AuthStatus.Initial)
-            assertTrue(actual[1] is AuthStatus.Error)
+            assertEquals(actual[0], AuthStatus.Initial)
+            assertEquals(actual[1],AuthStatus.Error("error"))
             job.cancel()
         }
     }

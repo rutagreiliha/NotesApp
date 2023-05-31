@@ -19,7 +19,7 @@ class HomeViewModel @Inject constructor(
     private val authRepo: RepositoryAuthInterface,
     private val dataRepo: RepositoryDataInterface, private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
-    private val _status = MutableStateFlow<Status?>(AuthStatus.Initial())
+    private val _status = MutableStateFlow<Status?>(AuthStatus.Initial)
     val status = _status.asStateFlow()
 
     fun clearUpdate() {

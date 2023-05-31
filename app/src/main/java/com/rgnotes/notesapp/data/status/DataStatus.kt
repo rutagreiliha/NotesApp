@@ -1,10 +1,10 @@
 package com.rgnotes.notesapp.data.status
 
 sealed class DataStatus : Status() {
-    class Initial() : DataStatus()
-    class Loading() : DataStatus()
-    class GetNote<T>(val data: T) : DataStatus()
-    class SetNote<T>(val data: T) : DataStatus()
-    class DeleteNote<T>(val data: T) : DataStatus()
-    class Error(val message: String?) : DataStatus()
+    object Initial : DataStatus()
+    object Loading : DataStatus()
+    data class GetNote<T>(val data: T) : DataStatus()
+    data class SetNote<T>(val data: T) : DataStatus()
+    data class DeleteNote<T>(val data: T) : DataStatus()
+    data class Error(val message: String?) : DataStatus()
 }

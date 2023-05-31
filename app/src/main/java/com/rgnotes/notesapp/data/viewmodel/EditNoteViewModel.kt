@@ -20,7 +20,7 @@ class EditNoteViewModel @Inject constructor(
     private val ioDispatcher: CoroutineDispatcher
 ) :
     ViewModel() {
-    private val _status = MutableStateFlow<Status?>(DataStatus.Initial())
+    private val _status = MutableStateFlow<Status?>(DataStatus.Initial)
     val status = _status.asStateFlow()
 
     suspend fun clearUpdate() {

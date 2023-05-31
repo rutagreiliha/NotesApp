@@ -23,7 +23,7 @@ class SettingsViewModel @Inject constructor(
     ViewModel() {
 
 
-    private val _status = MutableStateFlow<Status?>(AuthStatus.Initial())
+    private val _status = MutableStateFlow<Status?>(AuthStatus.Initial)
     val status = _status.asStateFlow()
 
     suspend fun clearUpdate() {

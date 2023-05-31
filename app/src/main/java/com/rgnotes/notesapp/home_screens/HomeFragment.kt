@@ -21,6 +21,8 @@ import com.rgnotes.notesapp.R
 import com.rgnotes.notesapp.data.status.AuthStatus
 import com.rgnotes.notesapp.data.status.DataStatus
 import com.rgnotes.notesapp.data.utils.Note
+import com.rgnotes.notesapp.data.utils.SortNotes
+import com.rgnotes.notesapp.data.utils.SortNotes.orders
 import com.rgnotes.notesapp.data.viewmodel.HomeViewModel
 import com.rgnotes.notesapp.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -90,11 +92,8 @@ class HomeFragment : Fragment() {
                                 notes.addAll(it.data as ArrayList<Note>)
                                 if (notes.isEmpty()) {
                                     nonotes.visibility = VISIBLE
-                                }
-                                if (currentOrder == "Newest first") {
-                                    notes.sortByDescending { it.dateTime }
-                                } else {
-                                    notes.sortBy { it.dateTime }
+                                }else {
+                                    SortNotes.sortNotes(notes, currentOrder)
                                 }
                                 adapter.notifyDataSetChanged()
                                 viewmodel.clearUpdate()
@@ -137,36 +136,14 @@ class HomeFragment : Fragment() {
                 when (it.itemId) {
                     R.id.sort -> {
                         val confirmationDialog = android.app.AlertDialog.Builder(requireContext())
-                        val orders = arrayOf("Newest first", "Oldest first", "A to Z", "Z to A")
+
                         confirmationDialog.setTitle("Sort by")
-                            .setItems(orders, DialogInterface.OnClickListener { dialog, which ->
-                                when (orders[which]) {
-                                    "Newest first" -> {
-                                        counter = 0
-                                        currentOrder = "Newest first"
-                                        notes.sortByDescending { it.dateTime }
-                                        adapter.notifyDataSetChanged()
-                                    }
-                                    "Oldest first" -> {
-                                        counter = 0
-                                        currentOrder = "Oldest first"
-                                        notes.sortBy { it.dateTime }
-                                        adapter.notifyDataSetChanged()
-                                    }
-                                    "A to Z" -> {
-                                        counter = 0
-                                        currentOrder = "A to Z"
-                                        notes.sortBy { it.title }
-                                        adapter.notifyDataSetChanged()
-                                    }
-                                    "Z to A" -> {
-                                        counter = 0
-                                        currentOrder = "Z to A"
-                                        notes.sortByDescending { it.title }
-                                        adapter.notifyDataSetChanged()
-                                    }
-                                }
-                            })
+                            .setItems(orders) { _, which ->
+                                currentOrder = orders[which]
+                                counter = 0
+                                SortNotes.sortNotes(notes, currentOrder)
+                                adapter.notifyDataSetChanged()
+                            }
                         confirmationDialog.setNegativeButton("Back", null)
                         confirmationDialog.create().show()
                         true
