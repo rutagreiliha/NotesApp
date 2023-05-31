@@ -1,9 +1,9 @@
 package com.rgnotes.notesapp.data.repo
 
-import com.rgnotes.notesapp.data.utils.Note
-import com.rgnotes.notesapp.data.utils.User
 import com.rgnotes.notesapp.data.status.AuthStatus
 import com.rgnotes.notesapp.data.status.DataStatus
+import com.rgnotes.notesapp.data.utils.Note
+import com.rgnotes.notesapp.data.utils.User
 import kotlinx.coroutines.flow.Flow
 
 interface RepositoryDataInterface {

@@ -12,8 +12,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.rgnotes.notesapp.R
-import com.rgnotes.notesapp.data.utils.User
 import com.rgnotes.notesapp.data.status.AuthStatus
+import com.rgnotes.notesapp.data.utils.User
 import com.rgnotes.notesapp.data.viewmodel.RegisterViewModel
 import com.rgnotes.notesapp.databinding.FragmentRegisterBinding
 import dagger.hilt.android.AndroidEntryPoint

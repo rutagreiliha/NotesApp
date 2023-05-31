@@ -4,11 +4,11 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
-import com.rgnotes.notesapp.data.utils.Note
-import com.rgnotes.notesapp.data.utils.User
 import com.rgnotes.notesapp.data.firebase.FirebaseInfo.Companion.DATABASE_LOCATION
 import com.rgnotes.notesapp.data.status.AuthStatus
 import com.rgnotes.notesapp.data.status.DataStatus
+import com.rgnotes.notesapp.data.utils.Note
+import com.rgnotes.notesapp.data.utils.User
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
@@ -48,15 +48,15 @@ class RepositoryDataImplemented : RepositoryDataInterface {
             val listOfNotes = ArrayList<Note>()
             database.child("users").child(Firebase.auth.currentUser!!.uid).child("notes").get()
                 .await().children.forEach { item ->
-                listOfNotes.add(
-                    Note(
-                        item.child("title").value.toString(),
-                        item.child("body").value.toString(),
-                        item.child("dateTime").value.toString(),
-                        item.child("id").value.toString()
+                    listOfNotes.add(
+                        Note(
+                            item.child("title").value.toString(),
+                            item.child("body").value.toString(),
+                            item.child("dateTime").value.toString(),
+                            item.child("id").value.toString()
+                        )
                     )
-                )
-            }
+                }
             emit(DataStatus.GetNote(listOfNotes))
         } catch (e: Exception) {
             emit(DataStatus.Error("Something went wrong!"))

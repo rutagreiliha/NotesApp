@@ -8,8 +8,6 @@ import com.rgnotes.notesapp.data.status.AuthStatus
 import com.rgnotes.notesapp.data.status.Status
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -19,22 +17,23 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val authRepository: RepositoryAuthInterface,
-    private val dataRepository: RepositoryDataInterface
+    private val dataRepository: RepositoryDataInterface,
+    private val ioDispatcher: CoroutineDispatcher
 ) :
     ViewModel() {
 
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+
     private val _status = MutableStateFlow<Status?>(AuthStatus.Initial())
-    val status= _status.asStateFlow()
+    val status = _status.asStateFlow()
 
     suspend fun clearUpdate() {
-        _status.value =null
+        _status.value = null
     }
 
     fun signOut() {
         viewModelScope.launch {
             withContext(ioDispatcher) {
-                authRepository.signOutUser().collect { _status.value =it }
+                authRepository.signOutUser().collect { _status.value = it }
             }
         }
     }
@@ -42,7 +41,7 @@ class SettingsViewModel @Inject constructor(
     fun reAuthenticate(password: String) {
         viewModelScope.launch {
             withContext(ioDispatcher) {
-                authRepository.reAuthenticate(password).collect { _status.value =it }
+                authRepository.reAuthenticate(password).collect { _status.value = it }
             }
         }
     }
@@ -50,10 +49,10 @@ class SettingsViewModel @Inject constructor(
     fun deleteAccount() {
         viewModelScope.launch {
             withContext(ioDispatcher) {
-                dataRepository.deleteAccountData().collect { _status.value =it }
+                dataRepository.deleteAccountData().collect { _status.value = it }
             }
             withContext(ioDispatcher) {
-                authRepository.deleteAccount().collect { _status.value =it }
+                authRepository.deleteAccount().collect { _status.value = it }
             }
         }
     }
@@ -61,7 +60,7 @@ class SettingsViewModel @Inject constructor(
     fun getUserData() {
         viewModelScope.launch {
             withContext(ioDispatcher) {
-                dataRepository.getUserData().collect { _status.value =it }
+                dataRepository.getUserData().collect { _status.value = it }
             }
         }
     }

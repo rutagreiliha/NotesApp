@@ -14,8 +14,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.rgnotes.notesapp.R
-import com.rgnotes.notesapp.data.utils.Note
 import com.rgnotes.notesapp.data.status.DataStatus
+import com.rgnotes.notesapp.data.utils.Note
 import com.rgnotes.notesapp.data.viewmodel.EditNoteViewModel
 import com.rgnotes.notesapp.databinding.FragmentEditNoteBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -135,6 +135,7 @@ class EditNoteFragment : Fragment() {
         }
         return binding?.root
     }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

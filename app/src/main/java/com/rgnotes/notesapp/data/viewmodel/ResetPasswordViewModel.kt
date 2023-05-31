@@ -8,8 +8,6 @@ import com.rgnotes.notesapp.data.status.Status
 import com.rgnotes.notesapp.data.utils.Validate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -17,22 +15,27 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class ResetPasswordViewModel @Inject constructor(private val authRepo: RepositoryAuthInterface) :
+class ResetPasswordViewModel @Inject constructor(
+    private val authRepo: RepositoryAuthInterface,
+    private val ioDispatcher: CoroutineDispatcher
+) :
     ViewModel() {
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
     private val _status = MutableStateFlow<Status?>(AuthStatus.Initial())
-    val status= _status.asStateFlow()
+    val status = _status.asStateFlow()
 
     suspend fun clearUpdate() {
-        _status.value =null
+        _status.value = null
     }
-fun resetPassword(email: String?) {
+
+    fun resetPassword(email: String?) {
         viewModelScope.launch {
             if (Validate.email(email)) {
-                    withContext(ioDispatcher) {
-                        authRepo.resetPassword(email!!).collect { _status.value =it }
-                    }
-            }else{ _status.value =AuthStatus.Error("Invalid email format!")}
+                withContext(ioDispatcher) {
+                    authRepo.resetPassword(email!!).collect { _status.value = it }
+                }
+            } else {
+                _status.value = AuthStatus.Error("Invalid email format!")
+            }
         }
     }
 }

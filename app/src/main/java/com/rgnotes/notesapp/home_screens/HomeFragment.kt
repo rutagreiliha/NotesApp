@@ -18,9 +18,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rgnotes.notesapp.R
-import com.rgnotes.notesapp.data.utils.Note
 import com.rgnotes.notesapp.data.status.AuthStatus
 import com.rgnotes.notesapp.data.status.DataStatus
+import com.rgnotes.notesapp.data.utils.Note
 import com.rgnotes.notesapp.data.viewmodel.HomeViewModel
 import com.rgnotes.notesapp.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,13 +40,13 @@ class HomeFragment : Fragment() {
     var notes: ArrayList<Note> = arrayListOf()
     private val adapter = NoteListAdapter(notes)
     private var currentOrder = "Newest first"
-    var counter:Int = 0
+    var counter: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if(counter == 0){
+                if (counter == 0) {
                     Toast.makeText(
                         requireContext().applicationContext,
                         "Press again to exit!",
@@ -54,8 +54,7 @@ class HomeFragment : Fragment() {
                     )
                         .show()
                     counter = 1
-                }
-                else{
+                } else {
                     requireActivity().finish()
                     counter = 0
                 }
@@ -64,11 +63,12 @@ class HomeFragment : Fragment() {
             }
         })
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        counter=0
+        counter = 0
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         binding?.apply {
 
@@ -88,7 +88,9 @@ class HomeFragment : Fragment() {
                                 progress.visibility = GONE
                                 notes.clear()
                                 notes.addAll(it.data as ArrayList<Note>)
-                                if(notes.isEmpty()){nonotes.visibility= VISIBLE}
+                                if (notes.isEmpty()) {
+                                    nonotes.visibility = VISIBLE
+                                }
                                 if (currentOrder == "Newest first") {
                                     notes.sortByDescending { it.dateTime }
                                 } else {
@@ -140,25 +142,25 @@ class HomeFragment : Fragment() {
                             .setItems(orders, DialogInterface.OnClickListener { dialog, which ->
                                 when (orders[which]) {
                                     "Newest first" -> {
-                                        counter=0
+                                        counter = 0
                                         currentOrder = "Newest first"
                                         notes.sortByDescending { it.dateTime }
                                         adapter.notifyDataSetChanged()
                                     }
                                     "Oldest first" -> {
-                                        counter=0
+                                        counter = 0
                                         currentOrder = "Oldest first"
                                         notes.sortBy { it.dateTime }
                                         adapter.notifyDataSetChanged()
                                     }
                                     "A to Z" -> {
-                                        counter=0
+                                        counter = 0
                                         currentOrder = "A to Z"
                                         notes.sortBy { it.title }
                                         adapter.notifyDataSetChanged()
                                     }
                                     "Z to A" -> {
-                                        counter=0
+                                        counter = 0
                                         currentOrder = "Z to A"
                                         notes.sortByDescending { it.title }
                                         adapter.notifyDataSetChanged()
@@ -194,6 +196,7 @@ class HomeFragment : Fragment() {
         }
         return binding?.root
     }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

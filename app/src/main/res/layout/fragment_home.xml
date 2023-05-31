@@ -19,6 +19,7 @@
         android:elevation="4dp"
         android:background="#ffffff"
         android:layout_alignParentTop="true" />
+
     <TextView
         android:id="@+id/nonotes"
         android:layout_width="match_parent"
@@ -28,7 +29,7 @@
         android:textSize="13sp"
         android:layout_gravity="center"
         android:textColor="#8a8a8a"
-        android:gravity="center"/>
+        android:gravity="center" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/notesRecyclerView"

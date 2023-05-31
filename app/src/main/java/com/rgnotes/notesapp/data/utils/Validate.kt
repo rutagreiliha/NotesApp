@@ -2,8 +2,8 @@ package com.rgnotes.notesapp.data.utils
 
 
 class Validate {
-    companion object{
-        fun email(email:String?): Boolean {
+    companion object {
+        fun email(email: String?): Boolean {
             if (email.isNullOrEmpty()) {
                 return false
             } else if ("@" !in email || "." !in email) {
@@ -12,7 +12,7 @@ class Validate {
                 return false
             } else if ("\n" in email) {
                 return false
-            }else (return true)
+            } else (return true)
         }
 
         fun password(password: String?): Boolean {
@@ -20,7 +20,7 @@ class Validate {
                 return false
             } else if ("\n" in password) {
                 return false
-            }else if (password.count() < 6) {
+            } else if (password.count() < 6) {
                 return false
             } else (return true)
         }
