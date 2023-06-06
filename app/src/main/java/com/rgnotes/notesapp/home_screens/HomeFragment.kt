@@ -17,6 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.rgnotes.notesapp.R
 import com.rgnotes.notesapp.data.status.AuthStatus
 import com.rgnotes.notesapp.data.status.DataStatus
@@ -60,8 +61,6 @@ class HomeFragment : Fragment() {
                     requireActivity().finish()
                     counter = 0
                 }
-
-
             }
         })
     }
@@ -99,6 +98,7 @@ class HomeFragment : Fragment() {
                                 viewmodel.clearUpdate()
                             }
                             is AuthStatus.Success<*> -> {
+                                allelements.visibility=VISIBLE
                                 viewmodel.readAllNotes()
                                 viewmodel.clearUpdate()
                             }
@@ -129,7 +129,7 @@ class HomeFragment : Fragment() {
             notesRecyclerView.setHasFixedSize(true)
             notesRecyclerView.layoutManager =
                 LinearLayoutManager(requireContext().applicationContext)
-            val toolbar: Toolbar = toolbar as Toolbar
+            val toolbar: Toolbar = toolbar
             toolbar.inflateMenu(R.menu.home_menu_action_bar)
 
             toolbar.setOnMenuItemClickListener {
@@ -176,11 +176,13 @@ class HomeFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
+        view?.findViewById<RecyclerView>(R.id.notesRecyclerView)?.adapter = null
         _binding = null
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        view?.findViewById<RecyclerView>(R.id.notesRecyclerView)?.adapter = null
     }
 }
