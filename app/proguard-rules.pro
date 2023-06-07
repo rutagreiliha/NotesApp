@@ -23,6 +23,6 @@
 -keep class com.google.firebase.** {*;}
 -keep class com.google.android.gms.internal.** {*;}
 -keepclasseswithmembers class com.google.firebase.FirebaseException
--keepclasseswithmembers class com.rgnotes.notesapp.utils.** {*;}
--keep class com.rgnotes.notesapp.firebase.** {*;}
--keep class com.rgnotes.notesapp.repo.** {*;}
+-keep class com.rgnotes.notesapp.data.utils.** {*;}
+-keep class com.rgnotes.notesapp.data.firebase.** {*;}
+-keep class com.rgnotes.notesapp.data.repo.** {*;}
